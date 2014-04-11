@@ -1,2 +1,5 @@
 *.vdi
 .vagrant
+.bundle
+*.box
+/vendor/bundle
