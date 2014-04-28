@@ -1,5 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+VAGRANT_ROOT = File.dirname(File.expand_path(__FILE__))
 
 Vagrant.configure("2") do |config|
   # All Vagrant configuration is done here. The most common configuration
@@ -41,15 +42,15 @@ Vagrant.configure("2") do |config|
     # Don't boot with headless mode
     # vb.gui = true
   
-    # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "1024"]
+    # Change memory to 2 GB
+    vb.customize ["modifyvm", :id, "--memory", "2048"]
 
-    # Add an additional 100MB disk for ZFS
-    disk_path = "disk1.vdi"
-    #unless File.exists?(disk_path)
+    # Add some 100 MB disk for ZFS
+    (1..6).each do |i|
+      disk_path = File.join(VAGRANT_ROOT, ".disks/disk-#{i}.vdi")
       vb.customize ["createhd", "--filename", disk_path, "--size", 100]
-    #end
-    vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--port", 1, "--device", 0, "--type", "hdd", "--medium", disk_path]
+      vb.customize ["storageattach", :id, "--storagectl", "SATA Controller", "--port", i, "--device", 0, "--type", "hdd", "--medium", disk_path]
+    end
   end
   #
   # View the documentation for the provider you're using for more
