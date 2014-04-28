@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.1.1'
 
+gem 'puma'
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-contrib'
 #gem 'erubis'
@@ -19,7 +20,6 @@ gem 'rake'
 #gem 'yui-compressor'
 
 group :development do
-  gem 'thin'
   gem 'byebug'
 
   # LiveReload

@@ -46,6 +46,8 @@ module Zorro
     # Other routes:
     # use Routes::Posts
 
-
+    get '/' do
+      "Hello World Puma"
+    end
   end
 end
