@@ -26,28 +26,25 @@ end
 #require 'app/helpers'
 #require 'app/routes'
 
-module Zorro
-  class App < Sinatra::Application
-    configure do
-      disable :method_override
-      disable :static
+class Zorro < Sinatra::Application
+  configure do
+    disable :method_override
+    disable :static
 
-      set :erb, escape_html: true
-    end
-
-    use Rack::Deflater
-
-    #use Routes::Static
-
-    #unless settings.production?
-    #  use Routes::Assets
-    #end
-
-    # Other routes:
-    # use Routes::Posts
-
-    get '/' do
-      "Hello World Puma"
-    end
+    set :erb, escape_html: true
   end
+
+  use Rack::Deflater
+
+  #use Routes::Static
+
+  #unless settings.production?
+  #  use Routes::Assets
+  #end
+
+  # Other routes:
+  # use Routes::Posts
 end
+
+require_relative 'app/helpers/init'
+require_relative 'app/routes/init'

@@ -1,3 +1,2 @@
-require './app'
-
-run Zorro::App
+require File.join(File.dirname(__FILE__), 'app')
+run Zorro

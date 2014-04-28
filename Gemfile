@@ -22,7 +22,7 @@ gem 'rake'
 group :development do
   gem 'byebug'
 
-  # LiveReload
+  # Live reloading with Guard and Shotgun
   gem 'guard', '~> 2.6.0'
   gem 'guard-shotgun', :git => 'https://github.com/rchampourlier/guard-shotgun.git'
 end
