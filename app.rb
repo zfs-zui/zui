@@ -29,15 +29,13 @@ class Zorro < Sinatra::Application
   configure do
     # Setup template engine
     set :public_folder, Proc.new { File.join(File.dirname(__FILE__), 'public') }
-    set :erb, escape_html: true
+    set :erb, escape_html: false
 
     # Setup Sprockets
     %w{javascripts stylesheets images fonts}.each do |type|
       assets.append_path File.join(root, 'assets', type)
+      assets.append_path File.join(File.dirname(__FILE__), 'vendor', 'assets', type)
     end
-    #assets.append_path File.join(root, 'assets', 'stylesheets')
-    #assets.append_path File.join(root, 'assets', 'javascripts')
-    #assets.append_path File.join(root, 'assets', 'images')
 
     # Configure Sprockets::Helpers
     Sprockets::Helpers.configure do |config|

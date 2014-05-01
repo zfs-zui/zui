@@ -7,6 +7,14 @@ GIT
       guard
       spoon
 
+GIT
+  remote: https://github.com/zfs-zui/font-awesome-sass.git
+  revision: c390eccf148f6be762d997f6ec465ac90dcbfe40
+  specs:
+    font-awesome-sass (4.0.3.1)
+      sass (~> 3.2)
+      sprockets
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -103,6 +111,7 @@ DEPENDENCIES
   byebug
   compass
   erubis
+  font-awesome-sass!
   guard (~> 2.6.0)
   guard-shotgun!
   puma

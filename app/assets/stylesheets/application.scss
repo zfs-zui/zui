@@ -1,0 +1,18 @@
+/* application.scss */
+
+@import "variables";
+@import "bootstrap";
+@import "font-awesome";
+// Custom fonts
+@import "fonts";
+
+@import "sidebar";
+
+.wrapper {
+	@extend .container-fluid;
+}
+
+.progress.progress-thin {
+	height: 4px;
+	border-radius: 0;
+}

@@ -23,11 +23,12 @@ gem 'uglifier'
 #gem 'yui-compressor'
 
 gem 'bootstrap-sass'
+gem 'font-awesome-sass', git: 'https://github.com/zfs-zui/font-awesome-sass.git'
 
 group :development do
   gem 'byebug'
 
   # Live reloading with Guard and Shotgun
   gem 'guard', '~> 2.6.0'
-  gem 'guard-shotgun', :git => 'https://github.com/rchampourlier/guard-shotgun.git'
+  gem 'guard-shotgun', git: 'https://github.com/rchampourlier/guard-shotgun.git'
 end
