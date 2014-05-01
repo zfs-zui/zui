@@ -4,7 +4,7 @@ ruby '2.1.1'
 gem 'puma'
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-contrib'
-#gem 'erubis'
+gem 'erubis'
 #gem 'i18n'
 #gem 'activesupport'
 gem 'rake'
@@ -13,11 +13,16 @@ gem 'rake'
 #gem 'dotenv'
 
 # Assets
-#gem 'sprockets'
-#gem 'sprockets-memcache-store'
-#gem 'uglifier'
+gem 'sass'
+gem 'compass'
+gem 'sprockets'
+gem 'sprockets-helpers'
+#gem 'sprockets-sass'
+gem 'uglifier'
 #gem 'closure-compiler'
 #gem 'yui-compressor'
+
+gem 'bootstrap-sass'
 
 group :development do
   gem 'byebug'
