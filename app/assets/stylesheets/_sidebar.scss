@@ -15,7 +15,7 @@
 		padding: 0;
 		//margin-top: 50px;
 		background-color: white;
-		border-right: 1px solid #ccc;
+		//border-right: 1px solid #ccc;
 		//overflow-x: hidden;
 		//overflow-y: auto;
 
@@ -24,15 +24,12 @@
 
 	header {
 		height: 42px;
-		//padding: 8px 10px;
-		//background-color: $gray-lighter;
-		border-bottom: 1px solid #ccc;
 
 		.search {
 			float: left;
 			width: calc(100% - 44px);
 			height: 100%;
-			//display: inline-block;
+			border-bottom: 1px solid #ccc;
 
 			i {
 				position: absolute;
@@ -56,11 +53,18 @@
 			}
 		}
 
-		.create-pool {
-			display: inline-block;
+		.create-pool-btn {
+			@extend .btn;
+			@extend .btn-success;
+
+			float: right;
 			width: 44px;
 			height: 100%;
-			background-color: green;
+			
+			font-size: 18px;
+			line-height: 1.5;
+
+			border-radius: 0px;
 		}
 	}
 
@@ -70,6 +74,7 @@
 		top: 42px;
 		bottom: 0;
 		overflow: auto;
+		border-right: 1px solid #ccc;
 
 		.item {
 			@extend .list-group-item;

@@ -1,19 +1,16 @@
 GIT
-  remote: https://github.com/rchampourlier/guard-shotgun.git
-  revision: 0677d3ff0a8fe481a9d0f9fd9eaf1f212f623144
-  specs:
-    guard-shotgun (0.3.0)
-      ffi
-      guard
-      spoon
-
-GIT
   remote: https://github.com/zfs-zui/font-awesome-sass.git
   revision: c390eccf148f6be762d997f6ec465ac90dcbfe40
   specs:
     font-awesome-sass (4.0.3.1)
       sass (~> 3.2)
       sprockets
+
+GIT
+  remote: https://github.com/zfs-zui/ruby-zfs.git
+  revision: 45a5d3479d3860abfb092bf12728d20f43dfb0e8
+  specs:
+    zfs (0.1.1)
 
 GEM
   remote: https://rubygems.org/
@@ -30,7 +27,6 @@ GEM
       celluloid (>= 0.15.0)
       nio4r (>= 0.5.0)
     chunky_png (1.3.1)
-    coderay (1.1.0)
     columnize (0.8.9)
     compass (0.12.6)
       chunky_png (~> 1.2)
@@ -40,14 +36,7 @@ GEM
     erubis (2.7.0)
     execjs (2.0.2)
     ffi (1.9.3)
-    formatador (0.2.4)
     fssm (0.2.10)
-    guard (2.6.0)
-      formatador (>= 0.2.4)
-      listen (~> 2.7)
-      lumberjack (~> 1.0)
-      pry (>= 0.9.12)
-      thor (>= 0.18.1)
     hike (1.2.3)
     json (1.8.1)
     listen (2.7.3)
@@ -55,14 +44,8 @@ GEM
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
-    lumberjack (1.0.5)
-    method_source (0.8.2)
     multi_json (1.9.3)
     nio4r (1.0.0)
-    pry (0.9.12.6)
-      coderay (~> 1.0)
-      method_source (~> 0.8)
-      slop (~> 3.4)
     puma (2.8.2)
       rack (>= 1.1, < 2.0)
     rack (1.5.2)
@@ -74,6 +57,8 @@ GEM
     rb-fsevent (0.9.4)
     rb-inotify (0.9.4)
       ffi (>= 0.5.0)
+    rerun (0.9.0)
+      listen (~> 2.7)
     sass (3.2.19)
     sinatra (1.4.5)
       rack (~> 1.4)
@@ -86,9 +71,6 @@ GEM
       rack-test
       sinatra (~> 1.4.0)
       tilt (~> 1.3)
-    slop (3.5.0)
-    spoon (0.0.4)
-      ffi
     sprockets (2.12.1)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -96,7 +78,6 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sprockets-helpers (1.1.0)
       sprockets (~> 2.0)
-    thor (0.19.1)
     tilt (1.4.1)
     timers (1.1.0)
     uglifier (2.5.0)
@@ -112,13 +93,13 @@ DEPENDENCIES
   compass
   erubis
   font-awesome-sass!
-  guard (~> 2.6.0)
-  guard-shotgun!
   puma
   rake
+  rerun
   sass
   sinatra
   sinatra-contrib
   sprockets
   sprockets-helpers
   uglifier
+  zfs!

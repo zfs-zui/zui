@@ -12,6 +12,8 @@ gem 'rake'
 #gem 'json', '~> 1.7.7'
 #gem 'dotenv'
 
+gem 'zfs', git: 'https://github.com/zfs-zui/ruby-zfs.git'
+
 # Assets
 gem 'sass'
 gem 'compass'
@@ -26,9 +28,6 @@ gem 'bootstrap-sass'
 gem 'font-awesome-sass', git: 'https://github.com/zfs-zui/font-awesome-sass.git'
 
 group :development do
+  gem 'rerun'
   gem 'byebug'
-
-  # Live reloading with Guard and Shotgun
-  gem 'guard', '~> 2.6.0'
-  gem 'guard-shotgun', git: 'https://github.com/rchampourlier/guard-shotgun.git'
 end

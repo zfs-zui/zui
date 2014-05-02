@@ -12,6 +12,31 @@
 	@extend .container-fluid;
 }
 
+/*
+ * Main content
+ */
+.main {
+	@include make-sm-column(8);
+	@include make-sm-column-offset(4);
+
+	@include make-md-column(9);
+	@include make-md-column-offset(3);
+
+	padding: 20px 0 20px 0;
+	/*padding: 20px;
+
+	@media (min-width: 768px) {
+	    padding-left: 40px;
+	    padding-right: 40px;
+	}*/
+}
+
+.main > * {
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
+/* Custom progress bar */
 .progress.progress-thin {
 	height: 4px;
 	border-radius: 0;
