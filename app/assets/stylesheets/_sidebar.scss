@@ -77,10 +77,24 @@
 			border-left: 0;
 			border-right: 0;
 			border-color: #ccc;
-			padding-left: 20px;
+			font-weight: 600;
 
 			&:active {
 				background-color: darken($list-group-hover-bg, 8%) !important;
+			}
+
+			&.pool {
+				padding-left: 10px;
+
+				.progress {
+					margin-left: 42px;
+					margin-top: 2px;
+					margin-bottom: 2px;
+				}
+			}
+
+			&.filesystem {
+				padding-left: 30px;
 			}
 
 			// Override Bootstrap's border radius
@@ -92,21 +106,10 @@
 				border-top: 0;
 			}
 
-			&.group {
-				//background-color: #36a9e1;//lighten(#383e4b, 30%);//#f9f9f9;
-				//color: white;
-				//border: none;
-				font-weight: bold;
-				padding-left: 15px;
-
-				// Icon
-				i { margin-right: 4px; }
-			}
-
 			h1, h2, h3, h4, h5 {
 				@extend .list-group-item-heading;
 				font-size: 15px;
-				font-weight: normal;
+				font-weight: 600;
 				white-space: nowrap;
 				overflow: hidden;
 				text-overflow: ellipsis;
@@ -124,29 +127,27 @@
 
 			}
 
-			.progress {
-				margin-top: 2px;
-				margin-bottom: 2px;
-			}
-
 			.status {
 				font-weight: bold;
 				font-size: 11.5px;
 			}
 
-			.logo {
+			.icon {
 				float: left;
-				width: 32px;
-				height: 32px;
-				margin-right: 13px;
-				margin-top: 3px;
+				
+				&.pool {
+					width: 32px; height: 32px;
+					margin-right: 10px;
+					margin-top: 5px;
+					background: image-url("pool.png") no-repeat center;
+				}
 
-				&.folder { background: image-url("folder.png") no-repeat center; }
-				&.fedora { background: url("/img/fedora.png") no-repeat center; }
-				&.redhat { background: url("/img/redhat.png") no-repeat center; }
-				&.ubuntu { background: url("/img/ubuntu.png") no-repeat center; }
-				&.windows { background: url("/img/windows2012.png") no-repeat center; }
-				&.windows-xp { background: url("/img/windows_xp.png") no-repeat center; }
+				&.folder {
+					width: 16px; height: 16px;
+					margin-top: 2px;
+					margin-right: 6px;
+					background: image-url("folder.png") no-repeat center;
+				}
 			}
 		}
 	}
