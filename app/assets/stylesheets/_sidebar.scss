@@ -95,6 +95,14 @@
 
 			&.filesystem {
 				padding-left: 30px;
+
+				.badge {
+					color: $gray !important;
+					background-color: transparent !important;
+					border-radius: 0px;
+					font-weight: 600;
+					padding: 5px 0px;
+				}
 			}
 
 			// Override Bootstrap's border radius
@@ -124,7 +132,7 @@
 			}
 
 			.info {
-
+				color: $gray;
 			}
 
 			.status {
