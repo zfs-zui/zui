@@ -2,10 +2,10 @@ require './app'
 
 #use Rack::Cache, verbose: false
  
-map Zorro.assets_prefix do
-  run Zorro.assets
+map ZUI.assets_prefix do
+  run ZUI.assets
 end
 
 map '/' do
-  run Zorro
+  run ZUI
 end

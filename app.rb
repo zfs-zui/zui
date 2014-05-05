@@ -20,7 +20,7 @@ libraries.each do |path_name|
 end
 
 
-class Zorro < Sinatra::Application
+class ZUI < Sinatra::Application
   set :root,          File.join(File.dirname(__FILE__), 'app')
   set :assets,        Sprockets::Environment.new(root)
   set :assets_prefix, '/assets'

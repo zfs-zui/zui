@@ -6,15 +6,20 @@ GIT
       sass (~> 3.2)
       sprockets
 
-GIT
-  remote: https://github.com/zfs-zui/ruby-zfs.git
-  revision: 45a5d3479d3860abfb092bf12728d20f43dfb0e8
+PATH
+  remote: vendor/ruby-zfs
   specs:
     zfs (0.1.1)
 
 GEM
   remote: https://rubygems.org/
   specs:
+    activesupport (4.1.0)
+      i18n (~> 0.6, >= 0.6.9)
+      json (~> 1.7, >= 1.7.7)
+      minitest (~> 5.1)
+      thread_safe (~> 0.1)
+      tzinfo (~> 1.1)
     backports (3.6.0)
     bootstrap-sass (3.1.1.1)
       sass (~> 3.2)
@@ -38,12 +43,14 @@ GEM
     ffi (1.9.3)
     fssm (0.2.10)
     hike (1.2.3)
+    i18n (0.6.9)
     json (1.8.1)
     listen (2.7.3)
       celluloid (>= 0.15.2)
       celluloid-io (>= 0.15.0)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
+    minitest (5.3.3)
     multi_json (1.9.3)
     nio4r (1.0.0)
     puma (2.8.2)
@@ -78,8 +85,11 @@ GEM
       tilt (~> 1.1, != 1.3.0)
     sprockets-helpers (1.1.0)
       sprockets (~> 2.0)
+    thread_safe (0.3.3)
     tilt (1.4.1)
     timers (1.1.0)
+    tzinfo (1.1.0)
+      thread_safe (~> 0.1)
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
@@ -88,6 +98,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activesupport
   bootstrap-sass
   byebug
   compass

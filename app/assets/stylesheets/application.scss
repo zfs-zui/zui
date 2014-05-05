@@ -31,13 +31,18 @@
 	}*/
 }
 
-.main > * {
+/*.main > * {
 	margin-left: 40px;
 	margin-right: 40px;
-}
+}*/
 
 /* Custom progress bar */
 .progress.progress-thin {
 	height: 4px;
 	border-radius: 0;
+}
+
+/* Offset first tab to the right */
+.nav-tabs li:first-child {
+	margin-left: 30px;
 }

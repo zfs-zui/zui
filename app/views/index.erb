@@ -15,20 +15,33 @@
 
     <!-- Pool & datasets list -->
     <div class="list">
+      <% @pools.each do |pool| %>
+        <a class="item pool" href="#">
+          <span class="icon pool"></span>
+          <h1><%= pool.name %></h1>
 
-      <a class="item pool" href="#">
-        <span class="icon pool"></span>
-        <h1>tank</h1>
-
-        <div class="info">
-          <p>40 <b>GB</b> / 100 <b>GB</b></p>
-          <div class="progress progress-thin">
-            <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"></div>
+          <div class="info">
+            <p>
+              <%= number_to_human_size(pool.used) %> / 
+              <%= number_to_human_size(pool.available) %>
+            </p>
+            <div class="progress progress-thin">
+              <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%"></div>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
 
-      <a class="item filesystem active" href="#">
+        <!-- List pool's datasets -->
+        <% pool.children.each do |fs| %>
+          <a class="item filesystem" href="#">
+            <span class="icon folder"></span>
+            <span class="badge"><%= number_to_human_size(fs.used) %></span>
+            <%= fs.path %>
+          </a>
+        <% end %>
+      <% end %>
+
+      <!--<a class="item filesystem active" href="#">
         <span class="icon folder"></span>
         <span class="badge">5 <b>TB</b></span>
         dataset1/test
@@ -38,33 +51,18 @@
         <span class="icon folder"></span>
         <span class="badge">254 <b>GB</b></span>
         dataset2
-      </a>
+      </a>-->
 
     </div>
   </div>
 
   <div class="main">
-    <h1>Hello</h1>
-    <!-- Standard button -->
-<button type="button" class="btn btn-default">Default</button>
-
-<!-- Provides extra visual weight and identifies the primary action in a set of buttons -->
-<button type="button" class="btn btn-primary">Primary</button>
-
-<!-- Indicates a successful or positive action -->
-<button type="button" class="btn btn-success">Success</button>
-
-<!-- Contextual button for informational alert messages -->
-<button type="button" class="btn btn-info">Info</button>
-
-<!-- Indicates caution should be taken with this action -->
-<button type="button" class="btn btn-warning">Warning</button>
-
-<!-- Indicates a dangerous or potentially negative action -->
-<button type="button" class="btn btn-danger">Danger</button>
-
-<!-- Deemphasize a button by making it look like a link while maintaining button behavior -->
-<button type="button" class="btn btn-link">Link</button>
+    <h2>Pool "tank"</h2>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#">Overview</a></li>
+      <li><a href="#">Snapshots</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
   </div> <!-- .main -->
 
 </div> <!-- .row -->
