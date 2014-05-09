@@ -1,4 +1,4 @@
-module ZfsHelpers
+module ZFS::Helpers
   
   def zfs_tree(root = [])
     html = ''
