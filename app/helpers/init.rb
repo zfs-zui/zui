@@ -1,4 +1,5 @@
-#require_relative 'nicebytes'
-#ZUI.helpers NiceBytes
+require_relative 'zfs'
+ZUI.helpers ZfsHelpers
 
-ZUI.helpers ActiveSupport::NumberHelper
+require_relative 'partial'
+ZUI.helpers Partial::Helpers

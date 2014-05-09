@@ -55,6 +55,7 @@ class ZUI < Sinatra::Application
 
   helpers do
     include Sprockets::Helpers
+    include ActiveSupport::NumberHelper
   end
 end
 
