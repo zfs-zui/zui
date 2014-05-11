@@ -3,9 +3,9 @@
 @import "variables";
 @import "bootstrap";
 @import "font-awesome";
-// Custom fonts
-@import "fonts";
 
+@import "fonts";
+@import "callouts";
 @import "sidebar";
 
 .wrapper {
@@ -22,13 +22,37 @@
 	@include make-md-column(9);
 	@include make-md-column-offset(3);
 
-	padding: 20px 0 20px 0;
+	padding: 0;
 	/*padding: 20px;
 
 	@media (min-width: 768px) {
 	    padding-left: 40px;
 	    padding-right: 40px;
 	}*/
+
+	header {
+		background-color: $alternate-bg;
+		padding: 20px 40px 20px 40px;
+		height: 106px;
+	}
+
+	.nav.nav-tabs {
+		background-color: $alternate-bg;
+	}
+
+	.content {
+		@extend .container-fluid;
+		padding: 10px 40px;
+		/*padding-top: 10px;
+		padding-left: 40px;
+		padding-right: 40px;*/
+
+		border-top: 1px solid $nav-tabs-border-color;
+
+		form {
+			margin: 30px 0;
+		}
+	}
 }
 
 /*.main > * {
@@ -44,5 +68,5 @@
 
 /* Offset first tab to the right */
 .nav-tabs li:first-child {
-	margin-left: 30px;
+	margin-left: 40px;
 }

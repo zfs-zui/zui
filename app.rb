@@ -19,6 +19,9 @@ libraries.each do |path_name|
   require path_name
 end
 
+# Silence a warning
+I18n.config.enforce_available_locales = true
+
 
 class ZUI < Sinatra::Application
   set :root,          File.join(File.dirname(__FILE__), 'app')
@@ -49,6 +52,9 @@ class ZUI < Sinatra::Application
 
     #disable :method_override
     #disable :static
+    enable :sessions
+    # Use flash messages, and clear stale flash entries
+    use Rack::Flash, sweep: true
   end
 
   #use Rack::Deflater

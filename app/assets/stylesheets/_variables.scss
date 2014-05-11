@@ -32,7 +32,8 @@ $brand-primary:            #4c5566;
 //## Settings for some of the most global styles.
 
 //* Background color for `<body>`.
-$body-bg: #f3f5f9;
+$body-bg: #fff;
+$alternate-bg: #f3f5f9;
 //* Global text color on `<body>`.
 // $text-color:            $gray-dark
 
@@ -635,7 +636,7 @@ $list-group-hover-bg:           #f5f5f5;
 //* Text color of active list items
 $list-group-active-color:       darken($list-group-hover-bg, 70%);
 //* Background color of active list items
-$list-group-active-bg:          $body-bg;
+$list-group-active-bg:          $alternate-bg;
 //* Border color of active list elements
 $list-group-active-border:      darken($list-group-active-bg, 20%);
 //* Text color for content within active list items

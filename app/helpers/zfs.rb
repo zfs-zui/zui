@@ -14,7 +14,8 @@ module ZFS::Helpers
   end
 
   def percentage_used(fs)
-    ((fs.used.to_f / fs.available.to_f) * 100.0).ceil
+    total = fs.used.to_f + fs.available.to_f
+    ((fs.used.to_f / total) * 100.0).ceil
   end
 
 end

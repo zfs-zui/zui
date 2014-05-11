@@ -8,6 +8,7 @@
 
     <!-- Styles -->
     <link href="<%= stylesheet_path('application') %>" rel="stylesheet">
+    <script src="<%= javascript_path('application') %>"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -18,7 +19,39 @@
   </head>
   <body>
     <div class="wrapper">
-      <%= yield %>
-    </div>
+      <div class="row">
+
+        <div class="sidebar">
+          <header>
+            <!-- Search -->
+            <div class="search">
+              <i class="fa fa-search"></i>
+              <input id="search" type="text" class="form-control" placeholder="Search...">
+            </div>
+
+            <!-- Create Pool -->
+            <a href="/pools/new" class="create-pool-btn" title="Create pool">
+              <i class="fa fa-plus"></i>
+            </a>
+          </header>
+
+          <!-- Pools & folders list -->
+          <div class="list">
+            <% @pools.each do |pool| %>
+              <!-- Pool -->
+              <%= partial(:'sidebar/pool', locals: {pool: pool}) %>
+
+              <!-- List pool's folders -->
+              <%= zfs_tree(pool) %>
+            <% end %>
+          </div>
+        </div> <!-- .sidebar -->
+
+        <div class="main">
+          <%= yield %>
+        </div> <!-- .main -->
+
+      </div> <!-- .row -->
+    </div> <!-- .wrapper -->
   </body>
 </html>

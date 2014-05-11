@@ -1,9 +1,8 @@
-# Code from https://github.com/yb66/Sinatra-Partial/blob/master/lib/sinatra/partial.rb
-module Partial
-    
+module Template
+
+  # Code borrowed from https://github.com/yb66/Sinatra-Partial
   # This is here to make testing the private code easier while not including it in the helpers.
   module Private
-    
     # This gets the path to the template, taking into account whether leading underscores are needed.      
     # @private
     # param [String] partial_path
@@ -24,9 +23,25 @@ module Partial
       File.basename(partial_path).to_sym
     end
   end
-  
-  
+
   module Helpers
+
+    def render_flash()
+      html = ""
+      if flash[:error]
+        html << '<div class="bs-callout bs-callout-danger">'
+        html << '<h4>An error occured</h4>'
+        html << "<p>#{flash[:error]}</p>"
+        html << '</div>'
+      elsif flash[:ok]
+        html << '<div class="bs-callout bs-callout-success">'
+        html << '<h4>Success!</h4>'
+        html << "<p>#{flash[:ok]}</p>"
+        html << '</div>'
+      end
+      return html
+    end
+
     # Renders a partial to a string.
     # 
     # @param [#to_s] partial_name The partial to render.
@@ -73,17 +88,6 @@ module Partial
         self.method(engine).call(template, options)
       end
     end
-    
-  end # of Helpers
-  
-  # This is here to allow configuration options to be set.
-  # @private
-  def self.registered(app)
-    app.helpers(Partial::Helpers)
-    
-    # Configuration
-    app.set :partial_underscores, false
-    app.set :partial_template_engine, :haml
+
   end
-  
-end # Partial
+end
