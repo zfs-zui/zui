@@ -1,11 +1,15 @@
 /* application.scss */
 
 @import "variables";
+// vendor
 @import "bootstrap";
 @import "font-awesome";
 
-@import "fonts";
 @import "callouts";
+@import "pace";
+
+// custom
+@import "fonts";
 @import "sidebar";
 
 .wrapper {

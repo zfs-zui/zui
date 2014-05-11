@@ -1,6 +1,7 @@
 /* application.js
  *
  *= require jquery
+ *= require pace
  */
 
 // Sidebar search
@@ -23,6 +24,7 @@ $(document).ready(function() {
 // Sidebar selection handling
 $(document).on("click", ".sidebar .list .item", function() {
 	var $item = $(this)
+	var url = $item.attr("href")
 
 	// Select the item only if it wasn't already selected
 	if (!$item.hasClass("active")) {
@@ -30,6 +32,12 @@ $(document).on("click", ".sidebar .list .item", function() {
 		$(".sidebar .list .item.active").removeClass("active")
 		// And select the clicked one
 		$item.addClass("active")
+
+		// Load target url via ajax
+		$("#main").load(url)
+		/*$.ajax(url).done(function(html) {
+			$("#main").html(html)
+		})*/
 	}
 	
 	return false

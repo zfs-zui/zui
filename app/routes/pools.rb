@@ -2,16 +2,18 @@ require 'disk'
 require 'zfs'
 
 class ZUI < Sinatra::Application
+  before do
+    @pools = ZFS.pools unless request.xhr?
+  end
+
   # List all the pools
   get '/pools' do
-    @pools = ZFS.pools
     erb :index
   end
 
   # Render the New Pool form
   get '/pools/new' do
-    @pools = ZFS.pools
-  	erb :'pools/new'
+  	erb :'pools/new', layout: !request.xhr?
   end
 
   # Create a new pool
@@ -33,5 +35,11 @@ class ZUI < Sinatra::Application
     # Pool created successfully
     flash[:ok] = "Pool '#{name}' created successfully!"
     redirect back
+  end
+
+  # Show specified pool
+  get '/pools/:name' do |name|
+    @pool = ZFS::Pool.new(name)
+    erb :'pools/show', layout: !request.xhr?
   end
 end

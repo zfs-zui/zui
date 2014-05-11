@@ -3,8 +3,6 @@ require 'zfs'
 
 class ZUI < Sinatra::Application
   get '/' do
-    #puts Disk.all.inspect
-    @pools = ZFS.pools
-    erb :index
+    redirect to('/pools')
   end
 end

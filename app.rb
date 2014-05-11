@@ -48,12 +48,11 @@ class ZUI < Sinatra::Application
       config.public_path = public_folder
     end
 
-    #Sprockets::Sass.add_sass_functions = false
-
-    #disable :method_override
-    #disable :static
+    # Enable sessions to use flash messages across requests
     enable :sessions
-    # Use flash messages, and clear stale flash entries
+    # FIXME: replace with a secret key
+    set :session_secret, 'zui-key'
+    # Install flash middleware, and clear stale flash entries
     use Rack::Flash, sweep: true
   end
 
