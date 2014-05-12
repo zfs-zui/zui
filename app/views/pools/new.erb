@@ -29,15 +29,10 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Disks</label>
       <div class="col-sm-10">
-        <div class="checkbox">
-          <label><input type="checkbox" name="disks[]" value="sda"> sda</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="disks[]" value="sdc"> sdc</label>
-        </div>
-        <div class="checkbox">
-          <label><input type="checkbox" name="disks[]" value="sde"> sde</label>
-        </div>
+        <%- @disks.each do |disk| %>
+          <div class="checkbox"><label class="<%= 'disabled' if disk.partitioned? %>"><input type="checkbox" name="disks[]" value="<%= disk.name %>" <%= 'disabled' if disk.partitioned? %>> <%= "#{disk.name} (#{disk.model} - #{number_to_human_size(disk.size)})" %></label>
+          </div>
+        <% end %>
       </div>
     </div>
 

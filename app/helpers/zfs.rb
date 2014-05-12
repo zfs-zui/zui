@@ -1,13 +1,10 @@
 module ZFS::Helpers
   
-  def zfs_tree(root = [])
+  def zfs_tree(pool, selected='')
     html = ''
 
-    root.children({recursive: true}).each do |fs|
-      html << partial(:'sidebar/fs', locals: {fs: fs})
-
-      # Recurse through children
-      #html << zfs_tree(fs)
+    pool.children({recursive: true}).each do |fs|
+      html << partial(:'sidebar/filesystem', locals: {fs: fs, selected: selected})
     end
 
     return html

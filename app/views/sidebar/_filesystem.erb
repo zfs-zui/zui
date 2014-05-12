@@ -1,7 +1,7 @@
 <!-- ZFS Filesystem -->
-<a class="item filesystem" 
+<a class="item filesystem <%= 'active' if selected == fs.full_path %>" 
 	href="/pools/<%= fs.pool %>/<%= fs.path %>"
-	data-path="<%= fs.pool %>/<%= fs.path %>">
+	data-path="<%= fs.full_path %>">
   <span class="icon folder"></span>
   <%= fs.path %>
 </a>

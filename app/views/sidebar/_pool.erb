@@ -1,5 +1,5 @@
 <!-- ZFS pool -->
-<a class="item pool" 
+<a class="item pool <%= 'active' if selected == pool.name %>" 
     href="/pools/<%= pool.name %>"
     data-path="<%= pool.name %>">
   <span class="icon pool"></span>

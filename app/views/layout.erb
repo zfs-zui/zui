@@ -10,6 +10,12 @@
     <!-- Styles -->
     <link href="<%= stylesheet_path('application') %>" rel="stylesheet">
     <!-- Scripts -->
+    <script type="text/javascript">
+      paceOptions = {
+        startOnPageLoad: false, // Disable on initial page load
+        eventLag: false, // disabled
+      }
+    </script>
     <script src="<%= javascript_path('application') %>" type="text/javascript"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -41,10 +47,10 @@
           <div class="list">
             <% @pools.each do |pool| %>
               <!-- Pool -->
-              <%= partial(:'sidebar/pool', locals: {pool: pool}) %>
+              <%= partial(:'sidebar/pool', locals: {pool: pool, selected: @selected}) %>
 
               <!-- List pool's folders -->
-              <%= zfs_tree(pool) %>
+              <%= zfs_tree(pool, @selected) %>
             <% end %>
           </div>
         </div> <!-- .sidebar -->
