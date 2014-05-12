@@ -44,10 +44,28 @@ class ZUI < Sinatra::Application
     erb :index
   end
 
-  # Show specified pool
+  # Show a pool
   get '/pools/:name/?' do |name|
     @selected = name
+    # FIXME: check if it exists
     @pool = ZFS::Pool.new(name)
     erb :'pools/show', layout: !request.xhr?
   end
+
+  # Destroy a pool
+  delete '/pools/:name' do |name|
+    pool = ZFS::Pool.new(name)
+    if not pool.exist?
+      halt 404, 'Pool does not exist'
+    end
+
+    begin
+      pool.destroy!
+    rescue ZFS::Error => e
+      # FIXME: do something
+      puts e.message
+    end
+    redirect to('/')
+  end
+  
 end

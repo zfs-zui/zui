@@ -38,6 +38,8 @@ class ZUI < Sinatra::Application
     %w{javascripts stylesheets images fonts}.each do |type|
       assets.append_path File.join(root, 'assets', type)
       assets.append_path File.join(File.dirname(__FILE__), 'vendor', 'assets', type)
+      # Bootstrap assets
+      assets.append_path Compass::Frameworks['bootstrap'].templates_directory + "/../vendor/assets/#{type}"
     end
 
     # Configure Sprockets::Helpers

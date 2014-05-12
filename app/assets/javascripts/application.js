@@ -2,6 +2,9 @@
  *
  *= require jquery
  *= require pace
+ *= require bootstrap/transition
+ *= require bootstrap/dropdown
+ *= require bootstrap/modal
  */
 
 /*

@@ -40,3 +40,8 @@
 .bs-callout-success {
     @include bs-callout($brand-success);
 }
+
+// Remove the top margin for callouts in a modal panel
+.modal-body > .bs-callout {
+    margin-top: 0px;
+}

@@ -1,5 +1,50 @@
 <header>
-  <h2><%= @pool.name %></h2>
+  <h2 class="pull-left"><%= @pool.name %></h2>
+
+  <div class="btn-group pull-right">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-gear"></i> <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu" role="menu">
+      <li><a data-toggle="modal" data-target="#destroy-modal" href="#">Destroy</a></li>
+    </ul>
+  </div>
 </header>
 
-show pool
+<div class="content">
+pool
+</div>
+
+<!-- Destroy modal -->
+<div class="modal fade" id="destroy-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="destroy-form" method="post" action="/pools/<%= @pool.name %>">
+        <input type="hidden" name="_method" value="delete">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Destroy <%= @pool.name %></h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="bs-callout bs-callout-danger">
+            <h4>Danger!</h4>
+            <p>You are about to destroy the pool '<%= @pool.name %>'.<br>
+             This action cannot be undone, and all the data will be unrecoverable.</p>
+            <p>To proceed, enter the pool's name below.</p>
+          </div>
+
+          <input type="text" class="form-control" id="pool-name" name="name" placeholder="Enter pool name..." data-pool-name="<%= @pool.name %>">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="destroy" type="submit" class="btn btn-danger" disabled>Destroy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="<%= javascript_path('pools') %>" type="text/javascript"></script>
