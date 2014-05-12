@@ -35,9 +35,21 @@
 	}*/
 
 	header {
-		background-color: $alternate-bg;
-		padding: 20px 40px 20px 40px;
+		display: table;
+		width: 100%;
 		height: 106px;
+		padding: 20px 40px;
+		background-color: $alternate-bg;
+
+		.title, .actions {
+			display: table-cell;
+			vertical-align: middle;
+			//text-align: right;
+		}
+
+		h1, h2, h3, h4, h5, h6 {
+			margin: 0px;
+		}
 	}
 
 	.nav.nav-tabs {

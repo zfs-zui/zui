@@ -1,13 +1,20 @@
 <header>
-  <h2 class="pull-left"><%= @pool.name %></h2>
+  <div class="title">
+    <h2>
+      <img src="<%= image_path('pool.png') %>"> 
+      <%= @pool.name %>
+    </h2>
+  </div>
 
-  <div class="btn-group pull-right">
-    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-      <i class="fa fa-gear"></i> <span class="caret"></span>
-    </button>
-    <ul class="dropdown-menu" role="menu">
-      <li><a data-toggle="modal" data-target="#destroy-modal" href="#">Destroy</a></li>
-    </ul>
+  <div class="actions">
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <i class="fa fa-gear"></i> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a data-toggle="modal" data-target="#destroy-modal" href="#"><i class="fa fa-trash-o"></i> Destroy</a></li>
+      </ul>
+    </div>
   </div>
 </header>
 

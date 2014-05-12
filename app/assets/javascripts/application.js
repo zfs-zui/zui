@@ -35,7 +35,7 @@ $.fn.onScreen = function() {
 $(document).ready(function() {
 	// Scroll to the active sidebar item
 	var $selectedItem = $(".sidebar .item.active")
-	if (!$selectedItem.onScreen()) {
+	if ($selectedItem.length && !$selectedItem.onScreen()) {
 		$(".sidebar .list").animate({ 
 			scrollTop: $selectedItem.position().top 
 		}, 1000) // 1s duration
