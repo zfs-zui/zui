@@ -27,7 +27,7 @@
 
 		.search {
 			float: left;
-			width: calc(100% - 44px);
+			width: calc(100% - 42px);
 			height: 100%;
 			border-bottom: 1px solid #ccc;
 
@@ -53,18 +53,25 @@
 			}
 		}
 
-		.create-pool-btn {
-			@extend .btn;
-			@extend .btn-success;
+		.add-group {
+			position: absolute;
+			right: 0px;
 
-			float: right;
 			width: 44px;
-			height: 100%;
-			
-			font-size: 18px;
-			line-height: 1.5;
+			height: 42px;
 
-			border-radius: 0px;
+			button {
+				@extend .btn;
+				@extend .btn-success;
+				@extend .dropdown-toggle;
+
+				width: 100%;
+				height: 100%;
+
+				font-size: 18px;
+				line-height: 1.5;
+				border-radius: 0px;
+			}
 		}
 	}
 

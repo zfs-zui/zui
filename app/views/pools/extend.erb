@@ -1,17 +1,11 @@
 <header>
-  <h2 class="title">Create a new pool</h2>
+  <h2 class="title">Extend pool '<%= @pool.name %>'</h2>
 </header>
 
 <div class="content">
   <%= render_flash() %>
 
-  <form id="new-pool" class="form-horizontal" role="form" method="post" action="/pools/new">
-    <div class="form-group">
-      <label for="pool-name" class="col-sm-2 control-label">Pool Name</label>
-      <div class="col-sm-4">
-        <input type="text" class="form-control" id="pool-name" name="name">
-      </div>
-    </div>
+  <form id="expand-pool" class="form-horizontal" role="form" method="post" action="/pools/<%= @pool.name %>/extend">
 
     <div class="form-group">
       <label for="pool-vdev-type" class="col-sm-2 control-label">VDev Type</label>
@@ -38,7 +32,7 @@
 
     <div class="form-group">
       <div class="col-sm-offset-2 col-sm-4">
-        <button type="submit" class="btn btn-primary">Create Pool</button>
+        <button type="submit" class="btn btn-primary">Extend Pool</button>
       </div>
     </div>
   </form>

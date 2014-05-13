@@ -9,17 +9,34 @@
   <div class="actions">
     <div class="btn-group pull-right">
       <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-        <i class="fa fa-gear"></i> <span class="caret"></span>
+        <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
       </button>
       <ul class="dropdown-menu" role="menu">
+        <li><a href="/pools/<%= @pool.name %>/extend" data-remote="true"><i class="fa fa-plus-circle"></i> Extend Pool</a></li>
+        <li class="divider"></li>
         <li><a data-toggle="modal" data-target="#destroy-modal" href="#"><i class="fa fa-trash-o"></i> Destroy</a></li>
       </ul>
     </div>
   </div>
 </header>
 
-<div class="content">
-pool
+<!-- Nav Tabs -->
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+  <li><a href="#filesystems" data-toggle="tab">Filesystems</a></li>
+  <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
+  <li><a href="#sharing" data-toggle="tab">Sharing</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="overview">
+    <%= partial(:'pools/overview', locals: {pool: @pool}) %>
+  </div>
+
+  <div class="tab-pane" id="snapshots">
+    <%= partial(:'filesystems/snapshots', locals: {fs: @pool}) %>
+  </div>
 </div>
 
 <!-- Destroy modal -->

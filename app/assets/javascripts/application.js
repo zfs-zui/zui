@@ -2,9 +2,11 @@
  *
  *= require jquery
  *= require pace
+ *= require switchery
  *= require bootstrap/transition
  *= require bootstrap/dropdown
  *= require bootstrap/modal
+ *= require bootstrap/tab
  */
 
 /*
@@ -13,26 +15,42 @@
  * in the window's viewport.
  */
 $.fn.onScreen = function() {
-    var win = $(window);
+    var win = $(window)
     var viewport = {
         top : win.scrollTop(),
         left : win.scrollLeft()
-    };
+    }
 
-    viewport.right = viewport.left + win.width();
-    viewport.bottom = viewport.top + win.height();
+    viewport.right = viewport.left + win.width()
+    viewport.bottom = viewport.top + win.height()
  
     var bounds = this.offset();
-    bounds.right = bounds.left + this.outerWidth();
-    bounds.bottom = bounds.top + this.outerHeight();
+    bounds.right = bounds.left + this.outerWidth()
+    bounds.bottom = bounds.top + this.outerHeight()
  
     return (!(viewport.right < bounds.left || 
     	viewport.left > bounds.right || 
     	viewport.bottom < bounds.top || 
-    	viewport.top > bounds.bottom));
-};
+    	viewport.top > bounds.bottom))
+}
+
+// Load Switchery
+var loadSwitchery = function() {
+  // All inputs with class 'js-switch' are replaced with an iOS 7 style switch
+  var switches = Array.prototype.slice.call(document.querySelectorAll('.js-switch'))
+  switches.forEach(function(html) {
+    var switchery = new Switchery(html)
+  })
+}
+
+// Reload Switchery when loading a new page via Ajax
+$(document).ajaxComplete(function() {
+  loadSwitchery()
+})
 
 $(document).ready(function() {
+  loadSwitchery()
+
 	// Scroll to the active sidebar item
 	var $selectedItem = $(".sidebar .item.active")
 	if ($selectedItem.length && !$selectedItem.onScreen()) {
@@ -59,7 +77,10 @@ $(document).ready(function() {
 }) /* end document ready */
 
 // Sidebar selection handling
-$(document).on("click", ".sidebar .list .item", function() {
+$(document).on("click", ".sidebar .list .item", function(e) {
+  // Prevent the browser from loading the link
+  e.preventDefault();
+
 	var $item = $(this)
 	var url = $item.attr("href")
 
@@ -81,6 +102,4 @@ $(document).on("click", ".sidebar .list .item", function() {
 			}
 		})
 	}
-	
-	return false
 })

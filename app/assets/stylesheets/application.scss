@@ -5,10 +5,12 @@
 @import "bootstrap";
 @import "font-awesome";
 
-@import "callouts";
+@import "bs-callouts";
+// Vendor
 @import "pace";
+@import "switchery";
 
-// custom
+// Custom
 @import "fonts";
 @import "sidebar";
 
@@ -56,17 +58,28 @@
 		background-color: $alternate-bg;
 	}
 
+	.tab-content {
+		padding: 40px;
+	}
+
 	.content {
 		@extend .container-fluid;
 		padding: 10px 40px;
-		/*padding-top: 10px;
-		padding-left: 40px;
-		padding-right: 40px;*/
-
 		border-top: 1px solid $nav-tabs-border-color;
 
 		form {
 			margin: 30px 0;
+		}
+	}
+
+	.properties {
+		tr {
+			height: 38px;
+		}
+
+		td {
+			padding: 4px 8px;
+			vertical-align: middle;
 		}
 	}
 }

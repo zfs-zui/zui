@@ -38,9 +38,15 @@
             </div>
 
             <!-- Create Pool -->
-            <a href="/pools/new" class="create-pool-btn" title="Create pool">
-              <i class="fa fa-plus"></i>
-            </a>
+            <div class="add-group">
+              <button title="Create pool" data-toggle="dropdown">
+                <i class="fa fa-plus"></i>
+              </button>
+              <ul class="dropdown-menu" role="menu">
+                <li><a href="#">New Filesystem</a></li>
+                <li><a href="/pools/new">New Pool</a></li>
+              </ul>
+            </div>
           </header>
 
           <!-- Pools & folders list -->

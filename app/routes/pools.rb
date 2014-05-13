@@ -35,6 +35,37 @@ class ZUI < Sinatra::Application
     redirect back
   end
 
+  # Render the Extend Pool form
+  get '/pools/:name/extend' do |name|
+    @pool = ZFS::Pool.new(name)
+    halt 404, 'Pool does not exist' unless @pool.exist?
+
+    @disks = Disk.all.select { |d| d.transport == 'sata' }
+
+    erb :'pools/extend', layout: !request.xhr?
+  end
+
+  # Extend a pool
+  post '/pools/:name/extend' do |name|
+    pool = ZFS::Pool.new(name)
+    halt 404, 'Pool does not exist' unless pool.exist?
+
+    type  = params[:type]
+    disks = params[:disks]
+
+    # Try expanding the pool with the supplied parameters
+    begin
+      pool.add_vdev(type, disks)
+    rescue ZFS::Error => e
+      flash[:error] = e.message
+      redirect back
+    end
+
+    # Pool expanded successfully
+    flash[:ok] = "Pool '#{name}' successfully extended!"
+    redirect back
+  end
+
   # List all the pools
   get '/pools/?' do
     # By default, select the first pool
