@@ -82,7 +82,7 @@ $(document).on("click", ".sidebar .list .item", function(e) {
   e.preventDefault();
 
 	var $item = $(this)
-	var url = $item.attr("href")
+	var url = encodeURI($item.attr("href"))
 
 	// Select the item only if it wasn't already selected
 	if (!$item.hasClass("active")) {

@@ -1,6 +1,70 @@
 <header>
-  <h3><%= @fs.pool %></h3>
-  <h2><%= @fs.path %></h2>
+  <div class="title">
+    <h2>
+      <i class="icon folder-nm"></i> 
+      <%= @fs.path %>
+    </h2>
+  </div>
+
+  <div class="actions">
+    <div class="btn-group pull-right">
+      <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+        <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="#">Rename</a></li>
+        <li><a href="#">Clone</a></li>
+        <li class="divider"></li>
+        <li><a data-toggle="modal" data-target="#destroy-modal" href="#"><i class="fa fa-trash-o"></i> Destroy</a></li>
+      </ul>
+    </div>
+  </div>
 </header>
 
-show filesystem
+<!-- Nav Tabs -->
+<ul class="nav nav-tabs">
+  <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
+  <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
+  <li><a href="#sharing" data-toggle="tab">Sharing</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="overview">
+   
+  </div>
+
+  <div class="tab-pane" id="snapshots">
+    <%= partial(:'filesystems/snapshots', locals: {fs: @fs}) %>
+  </div>
+</div>
+
+<!-- Destroy modal -->
+<div class="modal fade" id="destroy-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="destroy-form" method="post" action="/pools/<%= @fs.full_path %>">
+        <input type="hidden" name="_method" value="delete">
+
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Destroy <%= @fs.name %></h4>
+        </div>
+
+        <div class="modal-body">
+          <div class="bs-callout bs-callout-danger">
+            <h4>Danger!</h4>
+            <p>You are about to destroy the filesystem '<%= @fs.name %>'.<br>
+             This action cannot be undone, and all the data will be unrecoverable.</p>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+          <button id="destroy" type="submit" class="btn btn-danger">Destroy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

@@ -84,10 +84,23 @@
 	}
 }
 
-/*.main > * {
-	margin-left: 40px;
-	margin-right: 40px;
-}*/
+.icon {
+	display: inline-block;
+	vertical-align: middle;
+
+	&.folder-nm {
+		width: 32px;
+		height: 32px;
+		margin-top: -4px; // fix position
+		background-image: image-url('folder_32.png');
+	}
+}
+
+/* Disable Bootstrap's glow for inputs */
+.form-control:focus {
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
 
 /* Custom progress bar */
 .progress.progress-thin {

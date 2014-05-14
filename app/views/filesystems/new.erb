@@ -1,0 +1,37 @@
+<header>
+  <h2 class="title">Create a new filesystem</h2>
+</header>
+
+<div class="content">
+  <%= render_flash() %>
+
+  <form id="new-fs" class="form-horizontal" role="form" method="post" action="/fs/new">
+    <div class="form-group">
+      <label for="fs-name" class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-4">
+        <input type="text" class="form-control" id="fs-name" name="name">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="fs-location" class="col-sm-2 control-label">Location</label>
+      <div class="col-sm-4">
+        <select class="form-control" name="path">
+          <!-- List every pool and filesystems -->
+          <%- @pools.each do |pool| %>
+            <option value="<%= pool.name %>"><%= pool.name %></option>
+            <%- pool.children({recursive: true}).each do |fs| %>
+              <option value="<%= fs.full_path %>"><%= fs.full_path %></option>
+            <% end %>
+          <% end %>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-4">
+        <button type="submit" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </form>
+</div> <!-- .content -->
