@@ -46,6 +46,29 @@ class ZUI < Sinatra::Application
     redirect back
   end
 
+  # Update filesystem properties
+  put '/pools/:pool/*' do |pool, path|
+    fs = ZFS(File.join(pool, path))
+    if not fs.exist?
+      halt 404, 'Filesystem does not exist'
+    end
+
+    if params[:compression]
+      # Use LZ4 as the default compression algorithm
+      fs.compression = (params[:compression] == '1') ? 'lz4' : false
+    end
+
+    if params[:deduplication]
+      fs.dedup = (params[:deduplication] == '1')
+    end
+
+    if params[:readonly]
+      fs.readonly = (params[:readonly] == '1')
+    end
+
+    redirect to("/pools/#{fs.full_path}/")
+  end
+
   # Destroy a filesystem
   delete '/pools/:pool/*' do |pool, path|
     fs = ZFS(File.join(pool, path))
@@ -53,12 +76,14 @@ class ZUI < Sinatra::Application
       halt 404, 'Filesystem does not exist'
     end
 
+    # Try destroying the FS and all its children
     begin
-      fs.destroy!
+      fs.destroy!({ children: true })
     rescue ZFS::Error => e
       # FIXME: handle errors
       puts e.message
     end
+    
     redirect to('/')
   end
 

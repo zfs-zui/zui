@@ -1,6 +1,9 @@
-<h2 style="display:inline-block">Properties</h2>
-<span class="btn btn-primary btn-sm">Apply</span>
-<table class="table table-striped ">
+<header>
+  <h2 class="title">Properties</h2>
+  <button class="apply-btn">Apply</button>
+</header>
+
+<table class="table table-striped">
   <tbody>
     <tr>
       <td>Mountpoint</td>
@@ -8,15 +11,15 @@
     </tr>
     <tr>
       <td>Compression</td>
-      <td><input type="checkbox" class="js-switch" name="compression" <%= 'checked' if fs.compression? %>></td>
+      <td><input type="checkbox" class="switch property" name="compression" <%= 'checked data-checked' if fs.compression? %>></td>
     </tr>
     <tr>
       <td>Deduplication</td>
-      <td><input type="checkbox" class="js-switch" name="deduplication" <%= 'checked' if fs.dedup? %>></td>
+      <td><input type="checkbox" class="switch property" name="deduplication" <%= 'checked data-checked' if fs.dedup? %>></td>
     </tr>
     <tr>
       <td>Read only</td>
-      <td><input type="checkbox" class="js-switch" name="readonly" <%= 'checked' if fs.readonly? %>></td>
+      <td><input type="checkbox" class="switch property" name="readonly" <%= 'checked data-checked' if fs.readonly? %>></td>
     </tr>
   </tbody>
 </table>

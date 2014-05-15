@@ -1,0 +1,33 @@
+.overview-tab {
+
+	.usage, .properties {
+		@include make-md-column(6);
+		@include make-lg-column(4);
+	}
+
+	.properties {
+		.title {
+			display: inline-block;
+		}
+
+		.apply-btn {
+			@extend .btn;
+			@extend .btn-primary;
+			@extend .btn-sm;
+
+			float: right;
+			margin-top: 24px; // align button with title
+			font-weight: 600;
+			display: none; // hidden initially
+		}
+
+		tr {
+			height: 38px;
+		}
+
+		td {
+			padding: 4px 8px;
+			vertical-align: middle;
+		}
+	}
+}

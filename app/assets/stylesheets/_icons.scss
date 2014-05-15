@@ -1,0 +1,13 @@
+/* _icons.scss */
+
+.icon {
+	display: inline-block;
+	vertical-align: middle;
+
+	&.folder-nm {
+		width: 32px;
+		height: 32px;
+		margin-top: -4px; // fix position
+		background-image: image-url('folder_32.png');
+	}
+}

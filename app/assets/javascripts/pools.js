@@ -1,4 +1,12 @@
+/*
+ * pools.js
+ *
+ *= require _properties
+ */
+
 $(document).ready(function() {
+
+  // Enable the destroy button when the pools names match
   $('#destroy-modal #pool-name').keyup(function() {
       var value = $(this).val()
       var expected = $(this).attr("data-pool-name")
