@@ -2,7 +2,7 @@ class ZUI < Sinatra::Application
 
   # Show the specified filesystem,
   # represented by its full path
-  get '/pools/:pool/*' do |pool, path|
+  get '/pools/:pool/*/' do |pool, path|
     # Ignore if no path was given
     pass if path.empty?
 

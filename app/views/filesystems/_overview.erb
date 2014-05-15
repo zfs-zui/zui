@@ -1,0 +1,12 @@
+<!-- Overview tab -->
+<div class="row">
+  <!-- Usage column -->
+  <div class="col-md-6 col-lg-4">
+    <%= partial(:'filesystems/usage', locals: {fs: fs}) %>
+  </div>
+
+  <!-- Properties column -->
+  <div class="properties col-md-6 col-lg-4">
+    <%= partial(:'filesystems/properties', locals: {fs: fs}) %>
+  </div>
+</div> <!-- .row -->

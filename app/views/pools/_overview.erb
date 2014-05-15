@@ -1,42 +1,14 @@
+<!-- Overview tab -->
 <div class="row">
   <!-- Usage column -->
   <div class="col-md-6 col-lg-4">
-    <h2>Usage</h2>
-    <p><%= number_to_human_size(pool.used) %> / <%= number_to_human_size(pool.available) %> <span class="pull-right">56%</span></p>
-    <div class="progress progress-thin">
-      <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%= percentage_used(pool) %>%"></div>
-    </div>
-
-    <p>Children: <span class="pull-right"><%= number_to_human_size(pool.usedbychildren) %></span></p>
-    <p>Snapshots: <span class="pull-right"><%= number_to_human_size(pool.usedbysnapshots) %></span></p>
+    <%= partial(:'filesystems/usage', locals: {fs: pool}) %>
   </div>
 
   <!-- Properties column -->
   <div class="properties col-md-6 col-lg-4">
-    <h2 style="display:inline-block">Properties</h2>
-    <span class="btn btn-primary btn-sm">Apply</span>
-    <table class="table table-striped ">
-      <tbody>
-        <tr>
-          <td>Mountpoint</td>
-          <td><%= pool.mountpoint %></td>
-        </tr>
-        <tr>
-          <td>Compression</td>
-          <td><input type="checkbox" class="js-switch" name="compression" <%= 'checked' if pool.compression? %>></td>
-        </tr>
-        <tr>
-          <td>Deduplication</td>
-          <td><input type="checkbox" class="js-switch" name="deduplication" <%= 'checked' if pool.dedup? %>></td>
-        </tr>
-        <tr>
-          <td>Read only</td>
-          <td><input type="checkbox" class="js-switch" name="readonly" <%= 'checked' if pool.readonly? %>></td>
-        </tr>
-      </tbody>
-    </table>
+    <%= partial(:'filesystems/properties', locals: {fs: pool}) %>
   </div>
-
 </div>
 
 <!-- Status row -->

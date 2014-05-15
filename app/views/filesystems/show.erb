@@ -31,7 +31,7 @@
 <!-- Tab panes -->
 <div class="tab-content">
   <div class="tab-pane active" id="overview">
-   
+   <%= partial(:'filesystems/overview', locals: {fs: @fs}) %>
   </div>
 
   <div class="tab-pane" id="snapshots">

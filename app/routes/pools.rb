@@ -8,6 +8,23 @@ class ZUI < Sinatra::Application
     @pools = ZFS.pools unless request.xhr?
   end
 
+  # List all the pools
+  get '/pools/?' do
+    # By default, select the first pool
+    @selected = @pools.first.name if not @pools.empty?
+    # FIXME: Render the correct view
+    # FIXME: Check if there is a pool selected
+    erb :index
+  end
+
+  # Show a pool
+  get '/pools/:name/' do |name|
+    @selected = name
+    # FIXME: check if it exists
+    @pool = ZFS::Pool.new(name)
+    erb :'pools/show', layout: !request.xhr?
+  end
+
   # Render the New Pool form
   get '/pools/new' do
     @disks = Disk.all.select { |d| d.transport == 'sata' }
@@ -64,23 +81,6 @@ class ZUI < Sinatra::Application
     # Pool expanded successfully
     flash[:ok] = "Pool '#{name}' successfully extended!"
     redirect back
-  end
-
-  # List all the pools
-  get '/pools/?' do
-    # By default, select the first pool
-    @selected = @pools.first.name if not @pools.empty?
-    # FIXME: Render the correct view
-    # FIXME: Check if there is a pool selected
-    erb :index
-  end
-
-  # Show a pool
-  get '/pools/:name/?' do |name|
-    @selected = name
-    # FIXME: check if it exists
-    @pool = ZFS::Pool.new(name)
-    erb :'pools/show', layout: !request.xhr?
   end
 
   # Destroy a pool

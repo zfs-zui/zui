@@ -1,0 +1,22 @@
+<h2 style="display:inline-block">Properties</h2>
+<span class="btn btn-primary btn-sm">Apply</span>
+<table class="table table-striped ">
+  <tbody>
+    <tr>
+      <td>Mountpoint</td>
+      <td><%= fs.mountpoint %></td>
+    </tr>
+    <tr>
+      <td>Compression</td>
+      <td><input type="checkbox" class="js-switch" name="compression" <%= 'checked' if fs.compression? %>></td>
+    </tr>
+    <tr>
+      <td>Deduplication</td>
+      <td><input type="checkbox" class="js-switch" name="deduplication" <%= 'checked' if fs.dedup? %>></td>
+    </tr>
+    <tr>
+      <td>Read only</td>
+      <td><input type="checkbox" class="js-switch" name="readonly" <%= 'checked' if fs.readonly? %>></td>
+    </tr>
+  </tbody>
+</table>
