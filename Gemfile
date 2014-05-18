@@ -5,16 +5,8 @@ gem 'puma'
 gem 'sinatra', require: 'sinatra/base'
 gem 'sinatra-contrib'
 gem 'rack-flash3', require: 'rack-flash'
-
 gem 'erubis'
 gem 'activesupport', require: 'active_support/all'
-gem 'rake'
-#gem 'builder'
-#gem 'json', '~> 1.7.7'
-#gem 'dotenv'
-
-gem 'zfs', path: 'vendor/ruby-zfs'
-#git: 'https://github.com/zfs-zui/ruby-zfs.git'
 
 # Assets
 gem 'sass'
