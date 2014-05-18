@@ -43,13 +43,21 @@ var loadSwitchery = function() {
   })
 }
 
+// Switch to the currently selected tab
+var switchTab = function() {
+  var hash = window.location.hash
+  $('#main-tab a[href="' + hash + '"]').tab('show')
+}
+
 // Reload Switchery when loading a new page via Ajax
 $(document).ajaxComplete(function() {
   loadSwitchery()
+  switchTab()
 })
 
 $(document).ready(function() {
   loadSwitchery()
+  switchTab()
 
 	// Scroll to the active sidebar item
 	var $selectedItem = $(".sidebar .item.active")
@@ -102,4 +110,10 @@ $(document).on("click", ".sidebar .list .item", function(e) {
 			}
 		})
 	}
+})
+
+// Store the currently selected tab in the hash value
+$(document).on("shown.bs.tab", "ul.nav-tabs > li > a", function(e) {
+  var id = $(e.target).attr("href").substr(1)
+  window.location.hash = id
 })

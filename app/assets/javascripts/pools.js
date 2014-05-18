@@ -2,10 +2,10 @@
  * pools.js
  *
  *= require _properties
+ *= require _snapshots
  */
 
 $(document).ready(function() {
-
   // Enable the destroy button when the pools names match
   $('#destroy-modal #pool-name').keyup(function() {
       var value = $(this).val()

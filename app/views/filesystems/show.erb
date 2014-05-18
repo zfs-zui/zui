@@ -22,7 +22,7 @@
 </header>
 
 <!-- Nav Tabs -->
-<ul class="nav nav-tabs">
+<ul class="nav nav-tabs" id="main-tab">
   <li class="active"><a href="#overview" data-toggle="tab">Overview</a></li>
   <li><a href="#snapshots" data-toggle="tab">Snapshots</a></li>
   <li><a href="#sharing" data-toggle="tab">Sharing</a></li>
@@ -35,7 +35,7 @@
   </div>
 
   <div class="tab-pane" id="snapshots">
-    <%= partial(:'filesystems/snapshots', locals: {fs: @fs}) %>
+    <%= partial(:'filesystems/snapshots', locals: {fs: @fs, recursive: false}) %>
   </div>
 </div>
 

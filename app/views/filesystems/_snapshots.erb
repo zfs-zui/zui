@@ -1,1 +1,59 @@
-snapshots for pool <%= fs.pool %>, path: <%= fs.path %>
+<h2>New snapshot</h2>
+<div class="row">
+  <div class="col-md-6 col-lg-6">
+    <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/pools/<%= fs.full_path %>/snapshot">
+      <div class="input-group">
+        <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.utc %>">
+        <span class="input-group-btn">
+          <button class="btn btn-primary" type="button" id="create-snap">Create</button>
+        </span>
+      </div><!-- /input-group -->
+    </form>
+  </div>
+</div>
+
+<h2>Snapshots</h2>
+<%- if fs.snapshots({recursive: recursive}).empty? %>
+  <p>No snapshots</p>
+<%- else %>
+  <table class="table table-striped table-hover">
+  <thead>
+    <tr>
+      <th><input type="checkbox"></th>
+      <th>Name</th>
+      <th>Creation</th>
+      <th>Used</th>
+      <th>Refer</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%- fs.snapshots({recursive: recursive}).each do |snap| %>
+      <tr>
+        <td><input type="checkbox"></td>
+        <td><%= snap.path || snap.name %></td>
+        <td><%= snap.creation.to_formatted_s(:short) %></td>
+        <td><%= number_to_human_size(snap.used) %></td>
+        <td><%= number_to_human_size(snap.referenced) %></td>
+        <td>
+          <div class="btn-group pull-right">
+            <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+              Actions <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Rename</a></li>
+              <li><a href="#">Clone</a></li>
+              <li><a href="#">Rollback</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Delete</a></li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <%- end %>
+  </tbody>
+</table>
+<p>
+  <button class="btn btn-sm btn-danger" disabled>Delete</button>
+</p>
+<%- end %>

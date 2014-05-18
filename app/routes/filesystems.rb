@@ -8,7 +8,8 @@ class ZUI < Sinatra::Application
 
     full_path = File.join(pool, path)
     @selected = full_path
-    @fs = ZFS.new(full_path)
+    @fs = ZFS(full_path)
+    halt 404 unless @fs.exist?
 
     erb :'filesystems/show', layout: !request.xhr?
   end
@@ -53,6 +54,7 @@ class ZUI < Sinatra::Application
       halt 404, 'Filesystem does not exist'
     end
 
+    # FIXME: Error handling?
     if params[:compression]
       # Use LZ4 as the default compression algorithm
       fs.compression = (params[:compression] == '1') ? 'lz4' : false
@@ -83,7 +85,7 @@ class ZUI < Sinatra::Application
       # FIXME: handle errors
       puts e.message
     end
-    
+
     redirect to('/')
   end
 
