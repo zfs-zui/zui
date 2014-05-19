@@ -244,6 +244,10 @@ class ZFS
     private :property
   end
 
+  def size
+    used + available
+  end
+
   property :available,            type: :size
   property :compressratio,        type: :float
   property :creation,             type: :date

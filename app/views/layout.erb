@@ -56,7 +56,9 @@
               <%= partial(:'sidebar/pool', locals: {pool: pool, selected: @selected}) %>
 
               <!-- List pool's folders -->
-              <%= zfs_tree(pool, @selected) %>
+              <% pool.children({recursive: true}).each do |fs| %>
+                <%= partial(:'sidebar/filesystem', locals: {fs: fs, selected: @selected}) %>
+              <% end %>
             <% end %>
           </div>
         </div> <!-- .sidebar -->
