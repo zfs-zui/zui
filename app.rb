@@ -6,14 +6,7 @@ Bundler.require
 $: << File.expand_path('../', __FILE__)
 $: << File.expand_path('../lib', __FILE__)
 
-#require 'dotenv'
-#Dotenv.load
-
-#require 'active_support/core_ext/string'
-#require 'active_support/core_ext/array'
-#require 'active_support/core_ext/hash'
-#require 'active_support/json'
-
+# Include /lib
 libraries = Dir[File.expand_path('../lib/**/*.rb', __FILE__)]
 libraries.each do |path_name|
   require path_name
@@ -30,8 +23,7 @@ class ZUI < Sinatra::Application
   set :digest_assets, false
 
   configure do
-    # Setup template engine
-    set :public_folder, Proc.new { File.join(File.dirname(__FILE__), 'public') }
+    # Use erb as template engine
     set :erb, escape_html: false
 
     # Setup Sprockets
@@ -50,6 +42,9 @@ class ZUI < Sinatra::Application
       config.public_path = public_folder
     end
 
+    # Static files are served by Sprockets
+    disable :static
+
     # Enable sessions to use flash messages across requests
     enable :sessions
     # FIXME: replace with a secret key
@@ -57,8 +52,6 @@ class ZUI < Sinatra::Application
     # Install flash middleware, and clear stale flash entries
     use Rack::Flash, sweep: true
   end
-
-  #use Rack::Deflater
 
   helpers do
     include Sprockets::Helpers

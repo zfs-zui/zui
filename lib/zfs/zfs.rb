@@ -1,7 +1,7 @@
 require 'pathname'
 require 'date'
 require 'open3'
-require 'snapshot.rb'
+require_relative 'snapshot'
 
 # Get the correct ZFS object depending on the path
 def ZFS(path)
@@ -22,8 +22,8 @@ end
 
 # Pathname-inspired class to handle ZFS filesystems/snapshots/volumes
 class ZFS
-  @zfs_path   = %w(sudo zfs) # zfs
-  @zpool_path = %w(sudo zpool) # zpool
+  @zfs_path   = %w(sudo zfs)
+  @zpool_path = %w(sudo zpool)
 
   attr_reader :name
   attr_reader :pool
@@ -88,45 +88,6 @@ class ZFS
     end
   end
 
-  # Create filesystem
-  def create(opts={})
-    #return nil if exist?
-    raise AlreadyExists, "Filesystem '#{name}' already exists." if exist?
-
-    cmd = [ZFS.zfs_path].flatten + ['create']
-    cmd << '-p' if opts[:parents]
-    cmd << '-s' if opts[:volume] and opts[:sparse]
-    cmd += opts[:zfsopts].map{|el| ['-o', el]}.flatten if opts[:zfsopts]
-    cmd += ['-V', opts[:volume]] if opts[:volume]
-    cmd << name
-
-    out, status = Open3.capture2e(*cmd)
-    if status.success? and out.empty?
-      return self
-    elsif out.match(/dataset already exists\n$/)
-      nil
-    else
-      raise Error, "Something went wrong: #{out}, #{status}"
-    end
-  end
-
-  # Destroy filesystem
-  def destroy!(opts={})
-    raise NotFound if !exist?
-
-    cmd = [ZFS.zfs_path].flatten + ['destroy']
-    cmd << '-r' if opts[:children]
-    cmd << name
-
-    out, status = Open3.capture2e(*cmd)
-
-    if status.success? and out.empty?
-      return true
-    else
-      raise Error, "Something went wrong: out = #{out}"
-    end
-  end
-
   # Stringify
   def to_s
     "#<ZFS:#{name}>"
@@ -172,13 +133,6 @@ class ZFS
 
       if status.success? and stderr.empty?
         stdout.lines.collect do |line|
-          #values = line.split("\t")
-          #puts values
-          #name   = values[0]
-          #health = values[1]
-          #pool = ZFS::Pool.new(name.chomp)
-          #pool.health = health.chomp.downcase.to_sym
-          #pool
           ZFS(line.chomp)
         end
       else
@@ -349,8 +303,6 @@ end
 class ZFS::Pool < ZFS
   include Snapshotable
 
-  attr_accessor :health
-
   # Override constructor for better error handling
   def initialize(name)
     if name =~ /\//
@@ -445,6 +397,79 @@ class ZFS::Pool < ZFS
   end
 end
 
+class ZFS::Filesystem < ZFS
+  include Snapshotable
+
+  # Return sub-filesystem
+  def +(path)
+    if path.match(/^@/)
+      ZFS("#{name.to_s}#{path}")
+    else
+      path = Pathname(name) + path
+      ZFS(path.cleanpath.to_s)
+    end
+  end
+
+  # Create filesystem
+  def create(opts={})
+    #return nil if exist?
+    raise AlreadyExists, "Filesystem '#{name}' already exists." if exist?
+
+    cmd = [ZFS.zfs_path].flatten + ['create']
+    cmd << '-p' if opts[:parents]
+    cmd << '-s' if opts[:volume] and opts[:sparse]
+    cmd += opts[:zfsopts].map{|el| ['-o', el]}.flatten if opts[:zfsopts]
+    cmd += ['-V', opts[:volume]] if opts[:volume]
+    cmd << name
+
+    out, status = Open3.capture2e(*cmd)
+    if status.success? and out.empty?
+      return self
+    elsif out.match(/dataset already exists\n$/)
+      nil
+    else
+      raise Error, "Something went wrong: #{out}, #{status}"
+    end
+  end
+
+  # Destroy filesystem
+  def destroy!(opts={})
+    raise NotFound if !exist?
+
+    cmd = [ZFS.zfs_path].flatten + ['destroy']
+    cmd << '-r' if opts[:children]
+    cmd << name
+
+    out, status = Open3.capture2e(*cmd)
+
+    if status.success? and out.empty?
+      return true
+    else
+      raise Error, "Something went wrong: out = #{out}"
+    end
+  end
+
+  # Rename filesystem
+  def rename!(newname, opts={})
+    raise AlreadyExists if ZFS(newname).exist?
+
+    cmd = [ZFS.zfs_path].flatten + ['rename']
+    cmd << '-p' if opts[:parents]
+    cmd << name
+    cmd << newname
+
+    out, status = Open3.capture2e(*cmd)
+
+    if status.success? and out.empty?
+      initialize(newname)
+      return self
+    else
+      raise Exception, "something went wrong: out = #{out}"
+    end
+  end
+
+end
+
 class ZFS::Snapshot < ZFS
   def properties_modifiable?
     false
@@ -503,104 +528,4 @@ class ZFS::Snapshot < ZFS
     end
   end
 
-  # Send snapshot to another filesystem
-  def send_to(dest, opts={})
-    incr_snap = nil
-    dest = ZFS(dest)
-
-    if opts[:incremental] and opts[:intermediary]
-      raise ArgumentError, "can't specify both :incremental and :intermediary"
-    end
-
-    incr_snap = opts[:incremental] || opts[:intermediary]
-    if incr_snap
-      if incr_snap.is_a? String and incr_snap.match(/^@/)
-        incr_snap = self.parent + incr_snap
-      else
-        incr_snap = ZFS(incr_snap)
-        raise ArgumentError, "incremental snapshot must be in the same filesystem as #{self}" if incr_snap.parent != self.parent
-      end
-
-      snapname = incr_snap.name.sub(/^.+@/, '@')
-
-      raise NotFound, "destination must already exist when receiving incremental stream" unless dest.exist?
-      raise NotFound, "snapshot #{snapname} must exist at #{self.parent}" if self.parent.snapshots.grep(incr_snap).empty?
-      raise NotFound, "snapshot #{snapname} must exist at #{dest}" if dest.snapshots.grep(dest + snapname).empty?
-    elsif opts[:use_sent_name]
-      raise NotFound, "destination must already exist when using sent name" unless dest.exist?
-    elsif dest.exist?
-      raise AlreadyExists, "destination must not exist when receiving full stream"
-    end
-
-    dest = dest.name if dest.is_a? ZFS
-    incr_snap = incr_snap.name if incr_snap.is_a? ZFS
-
-    send_opts = ZFS.zfs_path.flatten + ['send']
-    send_opts.concat ['-i', incr_snap] if opts[:incremental]
-    send_opts.concat ['-I', incr_snap] if opts[:intermediary]
-    send_opts << '-R' if opts[:replication]
-    send_opts << name
-
-    receive_opts = ZFS.zfs_path.flatten + ['receive']
-    receive_opts << '-d' if opts[:use_sent_name]
-    receive_opts << dest
-
-    Open3.popen3(*receive_opts) do |rstdin, rstdout, rstderr, rthr|
-      Open3.popen3(*send_opts) do |sstdin, sstdout, sstderr, sthr|
-        while !sstdout.eof?
-          rstdin.write(sstdout.read(16384))
-        end
-        raise "stink" unless sstderr.read == ''
-      end
-    end
-  end
-end
-
-
-class ZFS::Filesystem < ZFS
-  include Snapshotable
-
-  # Return sub-filesystem
-  def +(path)
-    if path.match(/^@/)
-      ZFS("#{name.to_s}#{path}")
-    else
-      path = Pathname(name) + path
-      ZFS(path.cleanpath.to_s)
-    end
-  end
-
-  # Rename filesystem
-  def rename!(newname, opts={})
-    raise AlreadyExists if ZFS(newname).exist?
-
-    cmd = [ZFS.zfs_path].flatten + ['rename']
-    cmd << '-p' if opts[:parents]
-    cmd << name
-    cmd << newname
-
-    out, status = Open3.capture2e(*cmd)
-
-    if status.success? and out.empty?
-      initialize(newname)
-      return self
-    else
-      raise Exception, "something went wrong: out = #{out}"
-    end
-  end
-
-  # Promote this filesystem.
-  def promote!
-    raise NotFound, "filesystem is not a clone" if self.origin.nil?
-
-    cmd = [ZFS.zfs_path].flatten + ['promote', name]
-
-    out, status = Open3.capture2e(*cmd)
-
-    if status.success? and out.empty?
-      return self
-    else
-      raise Exception, "something went wrong: out = #{out}"
-    end
-  end
 end
