@@ -19,8 +19,7 @@ class Disk
     cmd = "sudo #{LSBLK_BIN} -j -b -o NAME,TYPE,SIZE,MODEL,PARTLABEL,FSTYPE,MOUNTPOINT,TRAN"
     stdout, stderr, status = Open3.capture3(cmd)
     if not status.success?
-      puts stderr
-      return nil
+      raise StandardError, "Could not retrieve disks list: #{stderr}"
     end
 
     JSON.parse(stdout, symbolize_names: true).each do |block|
