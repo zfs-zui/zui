@@ -21,7 +21,7 @@ class ZUI < Sinatra::Application
 
   # Render the New Pool form
   get '/pools/new' do
-    @disks = Disk.all.select { |d| d.transport == 'sata' }
+    @disks = Disk.all
   	erb :'pools/new', layout: !request.xhr?
   end
 
@@ -51,8 +51,7 @@ class ZUI < Sinatra::Application
     @pool = ZFS::Pool.new(name)
     halt 404, 'Pool does not exist' unless @pool.exist?
 
-    @disks = Disk.all.select { |d| d.transport == 'sata' }
-
+    @disks = Disk.all
     erb :'pools/extend', layout: !request.xhr?
   end
 

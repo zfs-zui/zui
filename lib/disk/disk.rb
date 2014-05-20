@@ -45,12 +45,6 @@ class Disk
     list
   end
 
-  #def self.unused
-  #  self.all.select do |disk|
-  #    disk.partitioned? == false
-  #  end
-  #end
-
   def initialize(name)
     @name = name
   end
