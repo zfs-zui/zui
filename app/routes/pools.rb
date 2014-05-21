@@ -41,7 +41,7 @@ class ZUI < Sinatra::Application
       redirect back
     end
 
-    # Pool created successfully
+    # Success
     flash[:ok] = "Pool '#{name}' created successfully!"
     redirect back
   end
@@ -71,7 +71,7 @@ class ZUI < Sinatra::Application
       redirect back
     end
 
-    # Pool expanded successfully
+    # Success
     flash[:ok] = "Pool '#{name}' successfully extended!"
     redirect back
   end
@@ -88,6 +88,7 @@ class ZUI < Sinatra::Application
     rescue ZFS::Error => e
       # FIXME: do something
       puts e.message
+      halt 500
     end
     redirect to('/')
   end

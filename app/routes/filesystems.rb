@@ -42,7 +42,7 @@ class ZUI < Sinatra::Application
       redirect back
     end
 
-    # Filesystem created successfully
+    # Success
     flash[:ok] = "Filesystem '#{fs.name}' created successfully!"
     redirect back
   end

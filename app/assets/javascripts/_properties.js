@@ -7,7 +7,7 @@ $(document).ready(function() {
     $(".properties .apply-btn").show()
   })
 
-  // Set the changed properties when the button is clicked
+  // Apply the changed properties
   $(".properties .apply-btn").click(function() {
     var $button = $(this)
     $button.prop('disabled', true)
