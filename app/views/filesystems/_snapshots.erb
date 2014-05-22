@@ -3,7 +3,7 @@
 <h2>New snapshot</h2>
 <div class="row">
   <div class="col-md-6 col-lg-6">
-    <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/<%= fs.full_path %>/snapshot">
+    <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/<%= fs.uid %>/snapshot">
       <div class="input-group">
         <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.strftime('%F_%R') %>">
         <span class="input-group-btn">
@@ -32,14 +32,14 @@
   </thead>
   <tbody>
     <%- fs.snapshots({recursive: recursive}).each do |snap| %>
-      <tr data-path="<%= snap.full_path %>">
+      <tr data-path="<%= snap.uid %>">
         <td><input type="checkbox"></td>
 
         <%- if recursive %>
-          <td><%= snap.full_path %></td>
+          <td><%= snap.path || snap.pool %></td>
         <% end %>
 
-        <td><%= snap.snapname %></td>
+        <td><%= snap.name %></td>
         <td><%= snap.creation.to_formatted_s(:short) %></td>
         <td><%= number_to_human_size(snap.used) %></td>
         <td><%= number_to_human_size(snap.referenced) %></td>
@@ -53,7 +53,7 @@
               <li><a href="#">Clone</a></li>
               <li><a href="#">Rollback</a></li>
               <li class="divider"></li>
-              <li><a href="/snapshot/<%= snap.full_path %>" class="delete-snapshot">Delete</a></li>
+              <li><a href="/snapshot/<%= snap.uid %>" class="delete-snapshot">Delete</a></li>
             </ul>
           </div>
         </td>

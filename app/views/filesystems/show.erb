@@ -42,7 +42,7 @@
 <div class="modal fade" id="destroy-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
-      <form id="destroy-form" method="post" action="/<%= @fs.full_path %>/">
+      <form id="destroy-form" method="post" action="/<%= @fs.uid %>/">
         <input type="hidden" name="_method" value="delete">
 
         <div class="modal-header">

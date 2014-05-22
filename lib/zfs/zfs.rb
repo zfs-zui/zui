@@ -25,6 +25,7 @@ class ZFS
   @zfs_path   = %w(sudo zfs)
   @zpool_path = %w(sudo zpool)
 
+  attr_reader :uid
   attr_reader :name
   attr_reader :pool
   attr_reader :path
@@ -35,27 +36,15 @@ class ZFS
   class AlreadyExists < Error; end
   class InvalidName < Error; end
 
-  # Create a new ZFS object (_not_ filesystem)
-  def initialize(name)
-    if name.length < 1
-      raise ArgumentError, "The name cannot be empty."
-    end
-    @name, @pool, @path = name, *name.split('/', 2)
-  end
-
-  # Return the path including the pool
-  def full_path
-    # FIXME
-    if @path
-      File.join(@pool, @path)
-    else
-      @pool
-    end
+  # Constructor
+  def initialize(uid)
+    raise ArgumentError, "The name cannot be empty." if uid.empty?
+    @uid = uid
   end
 
   # Return the parent of the current filesystem, or nil if there is none.
   def parent
-    p = Pathname(name).parent.to_s
+    p = Pathname(uid).parent.to_s
     if p == '.'
       nil
     else
@@ -67,9 +56,9 @@ class ZFS
   def children(opts={})
     raise NotFound if !exist?
 
-    cmd = [ZFS.zfs_path].flatten + %w(list -H -r -oname -tfilesystem)
+    cmd = ZFS.zfs_path + %w(list -H -r -oname -tfilesystem)
     cmd << '-d1' unless opts[:recursive]
-    cmd << name
+    cmd << uid
 
     stdout, stderr, status = Open3.capture3(*cmd)
     if status.success? and stderr == ""
@@ -77,34 +66,30 @@ class ZFS
         ZFS(fs.chomp)
       end
     else
-      raise Error, "Something went wrong..."
+      raise Error, "Something went wrong: #{stderr}"
     end
   end
 
   # Does the filesystem exist?
   def exist?
-    cmd = [ZFS.zfs_path].flatten + %w(list -H -oname) + [name]
+    cmd = ZFS.zfs_path + %w(list -H -oname) + [uid]
 
     out, status = Open3.capture2e(*cmd)
-    if status.success? and out == "#{name}\n"
-      true
-    else
-      false
-    end
+    return (status.success? && out == "#{uid}\n")
   end
 
   # Stringify
   def to_s
-    "#<ZFS:#{name}>"
+    "#<ZFS:#{uid}>"
   end
 
   # ZFS's are considered equal if they are the same class and name
   def ==(other)
-    other.class == self.class && other.name == self.name
+    other.class == self.class && other.uid == self.uid
   end
 
   def [](key)
-    cmd = [ZFS.zfs_path].flatten + %w(get -ovalue -Hp) + [key.to_s, name]
+    cmd = ZFS.zfs_path + %w(get -ovalue -Hp) + [key.to_s, uid]
 
     stdout, stderr, status = Open3.capture3(*cmd)
 
@@ -116,7 +101,7 @@ class ZFS
   end
 
   def []=(key, value)
-    cmd = [ZFS.zfs_path].flatten + ['set', "#{key.to_s}=#{value}", name]
+    cmd = ZFS.zfs_path + ['set', "#{key.to_s}=#{value}", uid]
 
     out, status = Open3.capture2e(*cmd)
 
@@ -133,7 +118,7 @@ class ZFS
 
     # Get an Array of all pools
     def pools
-      cmd = [ZFS.zpool_path].flatten + %w(list -H -o name)
+      cmd = ZFS.zpool_path + %w(list -H -o name)
       stdout, stderr, status = Open3.capture3(*cmd)
 
       if status.success? and stderr.empty?
@@ -147,7 +132,7 @@ class ZFS
 
     # Get a Hash of all mountpoints and their filesystems
     def mounts
-      cmd = [ZFS.zfs_path].flatten + %w(get -rHp -oname,value mountpoint)
+      cmd = ZFS.zfs_path + %w(get -rHp -oname,value mountpoint)
 
       stdout, stderr, status = Open3.capture3(*cmd)
 
@@ -312,17 +297,19 @@ end
 class ZFS::Pool < ZFS
   include Snapshotable
 
-  # Override constructor for better error handling
-  def initialize(name)
-    if name =~ /\//
+  def initialize(uid)
+    super(uid)
+
+    if uid =~ /\//
       raise InvalidName, "A pool name cannot contain the '/' character."
     end
-    super(name)
+
+    @name, @pool = uid, uid
   end
 
   # Create pool
   def create(type, disks)
-    raise AlreadyExists, "Pool '#{name}' already exists." if exist?
+    raise AlreadyExists, "Pool '#{uid}' already exists." if exist?
 
     # Check disks
     disks = disks || []
@@ -330,9 +317,9 @@ class ZFS::Pool < ZFS
       raise ArgumentError, 'Cannot create a pool without any disks!'
     end
 
-    cmd = [ZFS.zpool_path].flatten + ['create']
+    cmd = ZFS.zpool_path + ['create']
     cmd << '-f' # force
-    cmd << name
+    cmd << uid
     cmd << type if %w(mirror raidz1 raidz2 raidz3).include? type
     cmd << disks
     cmd.flatten!
@@ -341,7 +328,7 @@ class ZFS::Pool < ZFS
     if status.success? and out.empty?
       return self
     elsif out.match(/exists/)
-      raise AlreadyExists, "Pool '#{name}' already exists."
+      raise AlreadyExists, "Pool '#{uid}' already exists."
     else
       raise Error, "Something went wrong: #{out}, #{status}"
     end
@@ -349,7 +336,7 @@ class ZFS::Pool < ZFS
 
   # Add a VDEV to an existing pool
   def add_vdev(type, disks)
-    raise NotFound, "Pool '#{name}' does not exist." unless exist?
+    raise NotFound, "Pool '#{uid}' does not exist." unless exist?
 
     # Check disks
     disks = disks || []
@@ -357,9 +344,9 @@ class ZFS::Pool < ZFS
       raise ArgumentError, 'Cannot extend the pool without any disks!'
     end
 
-    cmd = [ZFS.zpool_path].flatten + ['add']
+    cmd = ZFS.zpool_path + ['add']
     cmd << '-f' # force
-    cmd << name
+    cmd << uid
     cmd << type if %w(mirror raidz1 raidz2 raidz3).include? type
     cmd << disks
     cmd.flatten!
@@ -376,8 +363,8 @@ class ZFS::Pool < ZFS
   def destroy!
     raise NotFound if !exist?
 
-    cmd = [ZFS.zpool_path].flatten + ['destroy']
-    cmd << name
+    cmd = ZFS.zpool_path + ['destroy']
+    cmd << uid
 
     out, status = Open3.capture2e(*cmd)
 
@@ -389,8 +376,8 @@ class ZFS::Pool < ZFS
   end
 
   def status
-    cmd = [ZFS.zpool_path].flatten + ['status']
-    cmd << name
+    cmd = ZFS.zpool_path + ['status']
+    cmd << uid
 
     out, status = Open3.capture2e(*cmd)
     if status.success?
@@ -404,12 +391,19 @@ end
 class ZFS::Filesystem < ZFS
   include Snapshotable
 
+  # Create a new ZFS filesystem
+  def initialize(uid)
+    super(uid)
+    @pool, @path = *uid.split('/', 2)
+    @name = @path.split('/').last
+  end
+
   # Return sub-filesystem
   def +(path)
     if path.match(/^@/)
-      ZFS("#{name.to_s}#{path}")
+      ZFS("#{uid.to_s}#{path}")
     else
-      path = Pathname(name) + path
+      path = Pathname(uid) + path
       ZFS(path.cleanpath.to_s)
     end
   end
@@ -417,14 +411,14 @@ class ZFS::Filesystem < ZFS
   # Create filesystem
   def create(opts={})
     #return nil if exist?
-    raise AlreadyExists, "Filesystem '#{name}' already exists." if exist?
+    raise AlreadyExists, "Filesystem '#{uid}' already exists." if exist?
 
-    cmd = [ZFS.zfs_path].flatten + ['create']
+    cmd = ZFS.zfs_path + ['create']
     cmd << '-p' if opts[:parents]
     cmd << '-s' if opts[:volume] and opts[:sparse]
     cmd += opts[:zfsopts].map{|el| ['-o', el]}.flatten if opts[:zfsopts]
     cmd += ['-V', opts[:volume]] if opts[:volume]
-    cmd << name
+    cmd << uid
 
     out, status = Open3.capture2e(*cmd)
     if status.success? and out.empty?
@@ -440,9 +434,9 @@ class ZFS::Filesystem < ZFS
   def destroy!(opts={})
     raise NotFound if !exist?
 
-    cmd = [ZFS.zfs_path].flatten + ['destroy']
+    cmd = ZFS.zfs_path + ['destroy']
     cmd << '-r' if opts[:children]
-    cmd << name
+    cmd << uid
 
     out, status = Open3.capture2e(*cmd)
 
@@ -476,16 +470,11 @@ end
 
 class ZFS::Snapshot < ZFS
   # Snapshot constructor
-  def initialize(name)
-    if name.empty?
-      raise ArgumentError, "The name cannot be empty."
-    end
-    full_path, @snapname = name.split('@', 2)
-    @name, @pool, @path = name, *full_path.split('/', 2)
-  end
+  def initialize(uid)
+    super(uid)
 
-  def snapname
-    @snapname
+    full_path, @name = uid.split('@', 2)
+    @pool, @path = *full_path.split('/', 2)
   end
 
   def properties_modifiable?
@@ -501,7 +490,7 @@ class ZFS::Snapshot < ZFS
 
   # Just remove the snapshot name
   def parent
-    ZFS(name.sub(/@.+/, ''))
+    ZFS(uid.sub(/@.+/, ''))
   end
 
   # Rename snapshot
@@ -527,13 +516,13 @@ class ZFS::Snapshot < ZFS
 
   # Clone snapshot
   def clone!(clone, opts={})
-    clone = clone.name if clone.is_a? ZFS
+    clone = clone.uid if clone.is_a? ZFS
 
     raise AlreadyExists if ZFS(clone).exist?
 
     cmd = [ZFS.zfs_path].flatten + ['clone']
     cmd << '-p' if opts[:parents]
-    cmd << name
+    cmd << uid
     cmd << clone
 
     out, status = Open3.capture2e(*cmd)
@@ -549,8 +538,8 @@ class ZFS::Snapshot < ZFS
   def destroy!(opts={})
     raise NotFound if !exist?
 
-    cmd = [ZFS.zfs_path].flatten + ['destroy']
-    cmd << name
+    cmd = ZFS.zfs_path+ ['destroy']
+    cmd << uid
 
     out, status = Open3.capture2e(*cmd)
 

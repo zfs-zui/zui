@@ -21,7 +21,7 @@
           <%- @pools.each do |pool| %>
             <option value="<%= pool.name %>"><%= pool.name %></option>
             <%- pool.children({recursive: true}).each do |fs| %>
-              <option value="<%= fs.full_path %>"><%= fs.full_path %></option>
+              <option value="<%= fs.uid %>"><%= fs.uid %></option>
             <% end %>
           <% end %>
         </select>

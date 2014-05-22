@@ -5,14 +5,14 @@ class ZFS
       raise NotFound, "no such filesystem" if !exist?
       raise AlreadyExists, " Snapshot '#{snapname}' already exists." if ZFS("#{name}@#{snapname}").exist?
 
-      cmd = [ZFS.zfs_path].flatten + ['snapshot']
+      cmd = ZFS.zfs_path + ['snapshot']
       cmd << '-r' if opts[:children]
-      cmd << "#{name}@#{snapname}"
+      cmd << "#{uid}@#{snapname}"
 
       out, status = Open3.capture2e(*cmd)
 
       if status.success? and out.empty?
-        return ZFS("#{name}@#{snapname}")
+        return ZFS("#{uid}@#{snapname}")
       else
         raise Exception, "something went wrong: #{out}"
       end
@@ -23,9 +23,9 @@ class ZFS
       raise NotFound, "no such filesystem" if !exist?
 
       stdout, stderr = [], []
-      cmd = [ZFS.zfs_path].flatten + %w(list -H -r -oname -tsnapshot)
+      cmd = ZFS.zfs_path + %w(list -H -r -oname -tsnapshot)
       cmd << '-d1' unless opts[:recursive]
-      cmd << name
+      cmd << uid
 
       stdout, stderr, status = Open3.capture3(*cmd)
 

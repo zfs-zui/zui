@@ -76,9 +76,9 @@ class ZUI < Sinatra::Application
     begin
       pool.destroy!
     rescue ZFS::Error => e
-      # FIXME: do something
+      # FIXME: better error handling
       puts e.message
-      halt 500
+      halt 500, e.message
     end
     redirect to('/')
   end

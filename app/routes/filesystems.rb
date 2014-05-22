@@ -66,7 +66,7 @@ class ZUI < Sinatra::Application
       fs.readonly = (params[:readonly] == '1')
     end
 
-    redirect to("/#{fs.full_path}/")
+    redirect to("/#{fs.uid}/")
   end
 
   # Destroy a filesystem
