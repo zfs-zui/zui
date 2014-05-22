@@ -1,4 +1,4 @@
-module Template
+module Partial
 
   # Code borrowed from https://github.com/yb66/Sinatra-Partial
   # This is here to make testing the private code easier while not including it in the helpers.
@@ -25,23 +25,7 @@ module Template
   end
 
   module Helpers
-
-    def render_flash()
-      html = ""
-      if flash[:error]
-        html << '<div class="bs-callout bs-callout-danger">'
-        html << '<h4>An error occured</h4>'
-        html << "<p>#{flash[:error]}</p>"
-        html << '</div>'
-      elsif flash[:ok]
-        html << '<div class="bs-callout bs-callout-success">'
-        html << '<h4>Success!</h4>'
-        html << "<p>#{flash[:ok]}</p>"
-        html << '</div>'
-      end
-      return html
-    end
-
+    
     # Renders a partial to a string.
     # 
     # @param [#to_s] partial_name The partial to render.

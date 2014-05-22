@@ -45,7 +45,12 @@ class ZFS
 
   # Return the path including the pool
   def full_path
-    File.join(@pool, @path)
+    # FIXME
+    if @path
+      File.join(@pool, @path)
+    else
+      @pool
+    end
   end
 
   # Return the parent of the current filesystem, or nil if there is none.
@@ -315,11 +320,6 @@ class ZFS::Pool < ZFS
     super(name)
   end
 
-  # Overriden, since @path is nil for a pool
-  def full_path
-    @pool
-  end
-
   # Create pool
   def create(type, disks)
     raise AlreadyExists, "Pool '#{name}' already exists." if exist?
@@ -475,6 +475,19 @@ class ZFS::Filesystem < ZFS
 end
 
 class ZFS::Snapshot < ZFS
+  # Snapshot constructor
+  def initialize(name)
+    if name.empty?
+      raise ArgumentError, "The name cannot be empty."
+    end
+    full_path, @snapname = name.split('@', 2)
+    @name, @pool, @path = name, *full_path.split('/', 2)
+  end
+
+  def snapname
+    @snapname
+  end
+
   def properties_modifiable?
     false
   end
@@ -529,6 +542,22 @@ class ZFS::Snapshot < ZFS
       return ZFS(clone)
     else
       raise Exception, "something went wrong: out = #{out}"
+    end
+  end
+
+  # Destroy snapshot
+  def destroy!(opts={})
+    raise NotFound if !exist?
+
+    cmd = [ZFS.zfs_path].flatten + ['destroy']
+    cmd << name
+
+    out, status = Open3.capture2e(*cmd)
+
+    if status.success? and out.empty?
+      return true
+    else
+      raise Error, "Something went wrong: out = #{out}"
     end
   end
 

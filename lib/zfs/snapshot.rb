@@ -3,7 +3,7 @@ class ZFS
     # Create a snapshot
     def snapshot!(snapname, opts={})
       raise NotFound, "no such filesystem" if !exist?
-      raise AlreadyExists, "#{snapname} exists" if ZFS("#{name}@#{snapname}").exist?
+      raise AlreadyExists, " Snapshot '#{snapname}' already exists." if ZFS("#{name}@#{snapname}").exist?
 
       cmd = [ZFS.zfs_path].flatten + ['snapshot']
       cmd << '-r' if opts[:children]

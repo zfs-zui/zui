@@ -1,9 +1,11 @@
+<div id="flash"></div>
+
 <h2>New snapshot</h2>
 <div class="row">
   <div class="col-md-6 col-lg-6">
     <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/<%= fs.full_path %>/snapshot">
       <div class="input-group">
-        <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.utc.strftime('%F_%H:%M') %>">
+        <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.strftime('%F_%R') %>">
         <span class="input-group-btn">
           <button class="btn btn-primary" type="button" id="create-snap">Create</button>
         </span>
@@ -16,12 +18,13 @@
 <%- if fs.snapshots({recursive: recursive}).empty? %>
   <p>No snapshots</p>
 <%- else %>
-  <table class="table table-striped table-hover">
+  <table class="table table-striped table-hover" id="snapshots-table">
   <thead>
     <tr>
-      <th><input type="checkbox"></th>
+      <th><input type="checkbox" id="check-all"></th>
+      <%= "<th>Filesystem</th>" if recursive %>
       <th>Name</th>
-      <th>Creation</th>
+      <th>Creation Date</th>
       <th>Used</th>
       <th>Refer</th>
       <th></th>
@@ -29,23 +32,28 @@
   </thead>
   <tbody>
     <%- fs.snapshots({recursive: recursive}).each do |snap| %>
-      <tr>
+      <tr data-path="<%= snap.full_path %>">
         <td><input type="checkbox"></td>
-        <td><%= snap.path || snap.name %></td>
+
+        <%- if recursive %>
+          <td><%= snap.full_path %></td>
+        <% end %>
+
+        <td><%= snap.snapname %></td>
         <td><%= snap.creation.to_formatted_s(:short) %></td>
         <td><%= number_to_human_size(snap.used) %></td>
         <td><%= number_to_human_size(snap.referenced) %></td>
         <td>
           <div class="btn-group pull-right">
             <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
-              Actions <span class="caret"></span>
+              <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
               <li><a href="#">Rename</a></li>
               <li><a href="#">Clone</a></li>
               <li><a href="#">Rollback</a></li>
               <li class="divider"></li>
-              <li><a href="#">Delete</a></li>
+              <li><a href="/snapshot/<%= snap.full_path %>" class="delete-snapshot">Delete</a></li>
             </ul>
           </div>
         </td>
@@ -54,6 +62,6 @@
   </tbody>
 </table>
 <p>
-  <button class="btn btn-sm btn-danger" disabled>Delete</button>
+  <button id="btn-delete" class="btn btn-sm btn-danger" disabled>Delete</button>
 </p>
 <%- end %>

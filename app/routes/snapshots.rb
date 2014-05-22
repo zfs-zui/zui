@@ -9,9 +9,24 @@ class ZUI < Sinatra::Application
     halt 404, 'Filesystem does not exist' if not fs.exist?
 
     # FIXME: handle errors
-    fs.snapshot!(name)
-    
-    redirect to('/'+path+'/')
+    begin
+      fs.snapshot!(name)
+    rescue ZFS::Error => e
+      halt 400, e.message
+    end
+  end
+
+  # Rename snapshot
+  put '/snapshot/*' do |path|
+    "rename #{path}"
+  end
+
+  # Delete snapshot
+  delete '/snapshot/*' do |path|
+    snap = ZFS(path)
+
+    # FIXME: handle errors
+    snap.destroy!
   end
 
 end
