@@ -3,7 +3,7 @@
   <div class="col-md-6 col-lg-6">
     <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/<%= fs.full_path %>/snapshot">
       <div class="input-group">
-        <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.utc %>">
+        <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.utc.strftime('%F_%H:%M') %>">
         <span class="input-group-btn">
           <button class="btn btn-primary" type="button" id="create-snap">Create</button>
         </span>
