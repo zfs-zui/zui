@@ -1,4 +1,4 @@
-$(document).on("click", "#create-snap", function() {
+$("#create-snap").click(function() {
   $button = $(this)
   $button.prop("disabled", true)
   $button.text("Creating...")

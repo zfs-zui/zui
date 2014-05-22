@@ -2,15 +2,15 @@ class ZUI < Sinatra::Application
 
   # Show the specified filesystem,
   # represented by its full path
-  get '/pools/:pool/*/' do |pool, path|
+  get '/:pool/*/' do |pool, path|
     # Ignore if no path was given
     pass if path.empty?
 
     full_path = File.join(pool, path)
     @selected = full_path
     @fs = ZFS(full_path)
-    halt 404 unless @fs.exist?
 
+    halt 404 unless @fs.exist?
     erb :'filesystems/show', layout: !request.xhr?
   end
 
@@ -48,11 +48,9 @@ class ZUI < Sinatra::Application
   end
 
   # Update filesystem properties
-  put '/pools/:pool/*' do |pool, path|
-    fs = ZFS(File.join(pool, path))
-    if not fs.exist?
-      halt 404, 'Filesystem does not exist'
-    end
+  put '/*/' do |path|
+    fs = ZFS(path)
+    halt 404, 'Filesystem does not exist' unless fs.exist?
 
     # FIXME: Error handling?
     if params[:compression]
@@ -68,15 +66,13 @@ class ZUI < Sinatra::Application
       fs.readonly = (params[:readonly] == '1')
     end
 
-    redirect to("/pools/#{fs.full_path}/")
+    redirect to("/#{fs.full_path}/")
   end
 
   # Destroy a filesystem
-  delete '/pools/:pool/*' do |pool, path|
+  delete '/:pool/*/' do |pool, path|
     fs = ZFS(File.join(pool, path))
-    if not fs.exist?
-      halt 404, 'Filesystem does not exist'
-    end
+    halt 404, 'Filesystem does not exist' unless fs.exist?
 
     # Try destroying the FS and all its children
     begin

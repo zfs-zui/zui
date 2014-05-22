@@ -1,7 +1,7 @@
 class ZUI < Sinatra::Application
 
   # Create a snapshot
-  post '/pools/*/snapshot' do |path|
+  post '/*/snapshot' do |path|
     name = params[:name]
     halt 400, 'A name is required' if name.empty?
 
@@ -11,7 +11,7 @@ class ZUI < Sinatra::Application
     # FIXME: handle errors
     fs.snapshot!(name)
     
-    redirect to('/pools/'+path+'/')
+    redirect to('/'+path+'/')
   end
 
 end

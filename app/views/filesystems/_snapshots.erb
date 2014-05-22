@@ -1,7 +1,7 @@
 <h2>New snapshot</h2>
 <div class="row">
   <div class="col-md-6 col-lg-6">
-    <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/pools/<%= fs.full_path %>/snapshot">
+    <form id="new-snap-form" class="form-horizontal" role="form" method="post" action="/<%= fs.full_path %>/snapshot">
       <div class="input-group">
         <input type="text" class="form-control" name="name" placeholder="Name" value="<%= DateTime.now.utc %>">
         <span class="input-group-btn">

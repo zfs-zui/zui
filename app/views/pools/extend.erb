@@ -5,7 +5,7 @@
 <div class="content">
   <%= render_flash() %>
 
-  <form id="expand-pool" class="form-horizontal" role="form" method="post" action="/pools/<%= @pool.name %>/extend">
+  <form id="expand-pool" class="form-horizontal" role="form" method="post" action="/<%= @pool.name %>/extend">
 
     <div class="form-group">
       <label for="pool-vdev-type" class="col-sm-2 control-label">VDev Type</label>

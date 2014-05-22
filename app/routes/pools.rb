@@ -2,32 +2,24 @@ require 'disk'
 require 'zfs'
 
 class ZUI < Sinatra::Application
-  # List all the pools
-  get '/pools/?' do
-    # By default, select the first pool
-    @selected = @pools.first.name if not @pools.empty?
-    # FIXME: Render the correct view
-    # FIXME: Check if there is a pool selected
-    erb :index
-  end
 
   # Show a pool
-  get '/pools/:name/' do |name|
-    @selected = name
+  get '/:pool/' do |pool|
+    @selected = pool
     # FIXME: check if it exists
-    @pool = ZFS::Pool.new(name)
+    @pool = ZFS(pool)
     erb :'pools/show', layout: !request.xhr?
   end
 
   # Render the New Pool form
-  get '/pools/new' do
+  get '/pool/new' do
     @disks = Disk.all
   	erb :'pools/new', layout: !request.xhr?
   end
 
   # Create a new pool
   # If an error occur, redirect to the form
-  post '/pools/new' do
+  post '/pool/new' do
     name  = params[:name]
     type  = params[:type]
     disks = params[:disks]
@@ -47,8 +39,8 @@ class ZUI < Sinatra::Application
   end
 
   # Render the Extend Pool form
-  get '/pools/:name/extend' do |name|
-    @pool = ZFS::Pool.new(name)
+  get '/:pool/extend' do |pool|
+    @pool = ZFS::Pool.new(pool)
     halt 404, 'Pool does not exist' unless @pool.exist?
 
     @disks = Disk.all
@@ -56,8 +48,8 @@ class ZUI < Sinatra::Application
   end
 
   # Extend a pool
-  post '/pools/:name/extend' do |name|
-    pool = ZFS::Pool.new(name)
+  post '/:pool/extend' do |pool| 
+    pool = ZFS::Pool.new(pool)
     halt 404, 'Pool does not exist' unless pool.exist?
 
     type  = params[:type]
@@ -77,11 +69,9 @@ class ZUI < Sinatra::Application
   end
 
   # Destroy a pool
-  delete '/pools/:name' do |name|
-    pool = ZFS::Pool.new(name)
-    if not pool.exist?
-      halt 404, 'Pool does not exist'
-    end
+  delete '/:pool/' do |pool|
+    pool = ZFS::Pool.new(pool)
+    halt 404, 'Pool does not exist' unless pool.exist?
 
     begin
       pool.destroy!
