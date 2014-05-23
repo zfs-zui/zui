@@ -8,7 +8,6 @@ class ZUI < Sinatra::Application
     fs = ZFS(path)
     halt 404, 'Filesystem does not exist' if not fs.exist?
 
-    # FIXME: handle errors
     begin
       fs.snapshot!(name)
     rescue ZFS::Error => e
@@ -21,12 +20,16 @@ class ZUI < Sinatra::Application
     "rename #{path}"
   end
 
-  # Delete snapshot
-  delete '/snapshot/*' do |path|
-    snap = ZFS(path)
-
-    # FIXME: handle errors
-    snap.destroy!
+  # Delete one or multiple snapshots
+  delete '/snapshot' do
+    snapshots = params[:snapshots]
+    snapshots.each do |snap|
+      begin
+        ZFS(snap).destroy!
+      rescue ZFS::Error => e
+        halt 400, e.message
+      end
+    end
   end
 
 end

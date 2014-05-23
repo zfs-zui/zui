@@ -33,7 +33,7 @@
   <tbody>
     <%- fs.snapshots({recursive: recursive}).each do |snap| %>
       <tr data-path="<%= snap.uid %>">
-        <td><input type="checkbox"></td>
+        <td><input type="checkbox" name="snapshots[]" value="<%= snap.uid %>"></td>
 
         <%- if recursive %>
           <td><%= snap.path || snap.pool %></td>
@@ -53,7 +53,7 @@
               <li><a href="#">Clone</a></li>
               <li><a href="#">Rollback</a></li>
               <li class="divider"></li>
-              <li><a href="/snapshot/<%= snap.uid %>" class="delete-snapshot">Delete</a></li>
+              <li><a href="#" data-path="<%= snap.uid %>" class="delete-snapshot">Delete</a></li>
             </ul>
           </div>
         </td>
@@ -62,6 +62,6 @@
   </tbody>
 </table>
 <p>
-  <button id="btn-delete" class="btn btn-sm btn-danger" disabled>Delete</button>
+  <button id="btn-bulk-delete" class="btn btn-sm btn-danger" disabled>Delete</button>
 </p>
 <%- end %>

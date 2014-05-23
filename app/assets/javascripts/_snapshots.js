@@ -1,3 +1,8 @@
+/*
+ * _snapshots.js
+ */
+
+// Create a snapshot
 $("#create-snap").click(function() {
   $button = $(this)
   $button.text("Creating...").prop("disabled", true)
@@ -7,7 +12,6 @@ $("#create-snap").click(function() {
     name: $("#new-snap-form input[name='name']").val()
   }
 
-  // FIXME: better error handling
   $.ajax({
     type: "POST",
     url: $("#new-snap-form").attr("action"),
@@ -36,7 +40,7 @@ $("#snapshots-table input:checkbox").change(function() {
   var nbrChecked = $("#snapshots-table tbody").find('input[type="checkbox"]:checked').length
 
   // Enable the delete button only if at least one checkbox is checked
-  $("#btn-delete").prop("disabled", (nbrChecked == 0))
+  $("#btn-bulk-delete").prop("disabled", (nbrChecked == 0))
 
   /*
    * If the current checkbox was unchecked,
@@ -47,16 +51,15 @@ $("#snapshots-table input:checkbox").change(function() {
   }
 })
 
-// Delete a snapshot
-$(".delete-snapshot").click(function(e) {
-  //Pace.restart()
-  e.preventDefault()
-  var url = encodeURI($(this).attr("href"))
-
-  // FIXME: better error handling
+// Delete the specified snapshots
+//  snaps: Array of snapshots identifiers
+var deleteSnapshots = function(snaps) {
   $.ajax({
     type: "DELETE",
-    url: url
+    url: '/snapshot',
+    data: {
+      'snapshots[]': snaps
+    }
   })
   .fail(function(xhr) {
     $("#flash").displayErrorMsg(xhr.responseText)
@@ -64,4 +67,23 @@ $(".delete-snapshot").click(function(e) {
   .done(function(html) {
     $("#main").load(window.location.href)
   })
+}
+
+// Delete a single snapshot
+$(".delete-snapshot").click(function(e) {
+  e.preventDefault()
+
+  var snapshot = $(this).attr("data-path")
+  deleteSnapshots([snapshot])
+})
+
+// Bulk delete selected snapshots
+$("#btn-bulk-delete").click(function() {
+  var checkedSnapshots = []
+
+  $("#snapshots-table tbody").find('input[type="checkbox"]:checked').each(function() {
+    checkedSnapshots.push($(this).val())
+  })
+
+  deleteSnapshots(checkedSnapshots)
 })
