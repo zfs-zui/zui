@@ -78,6 +78,16 @@ class ZFS
     return (status.success? && out == "#{uid}\n")
   end
 
+  # Concatenate filesystems
+  def +(path)
+    if path.match(/^@/)
+      ZFS("#{uid.to_s}#{path}")
+    else
+      path = Pathname(uid) + path
+      ZFS(path.cleanpath.to_s)
+    end
+  end
+
   # Stringify
   def to_s
     "#<ZFS:#{uid}>"
@@ -398,16 +408,6 @@ class ZFS::Filesystem < ZFS
     @name = @path.split('/').last
   end
 
-  # Return sub-filesystem
-  def +(path)
-    if path.match(/^@/)
-      ZFS("#{uid.to_s}#{path}")
-    else
-      path = Pathname(uid) + path
-      ZFS(path.cleanpath.to_s)
-    end
-  end
-
   # Create filesystem
   def create(opts={})
     #return nil if exist?
@@ -495,19 +495,19 @@ class ZFS::Snapshot < ZFS
 
   # Rename snapshot
   def rename!(newname, opts={})
-    raise AlreadyExists if (parent + "@#{newname}").exist?
+    newsnap = parent + "@#{newname}"
+    newuid = newsnap.uid
+    raise AlreadyExists, "Snapshot '#{newuid}' already exists." if newsnap.exist?
 
-    newname = (parent + "@#{newname}").name
-
-    cmd = [ZFS.zfs_path].flatten + ['rename']
+    cmd = ZFS.zfs_path + ['rename']
     cmd << '-r' if opts[:children]
-    cmd << name
-    cmd << newname
+    cmd << uid
+    cmd << newuid
 
     out, status = Open3.capture2e(*cmd)
 
     if status.success? and out.empty?
-      initialize(newname)
+      initialize(newuid)
       return self
     else
       raise Error, "Something went wrong: #{out}"

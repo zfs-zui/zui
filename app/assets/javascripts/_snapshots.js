@@ -51,6 +51,65 @@ $("#snapshots-table input:checkbox").change(function() {
   }
 })
 
+
+// Rename the clicked snapshot
+$(".rename-snapshot").click(function(e) {
+  e.preventDefault()
+
+  var $nameRow = $(this).closest("tr").find("td.name")
+  var $label = $nameRow.find("label")
+  var $input = $nameRow.find(".edit")
+
+  $label.hide()
+  $input.val($label.text())
+  $input.show().focus()
+})
+
+// Handle keys when renaming snapshot
+$("td.name :text").keyup(function(e) {
+  var $input = $(this)
+
+  // Enter key
+  if (e.which == 13) {
+    var snapshot = $input.closest("tr").attr("data-path")
+    var oldName = $input.prev("label").text()
+    var newName = $input.val()
+
+    // Abort if the name hasn't changed
+    if (oldName == newName) {
+      $(this).blur()
+      return
+    }
+
+    // Rename snapshot
+    $.ajax({
+      type: "PUT",
+      url: encodeURI("/snapshot/" + snapshot),
+      data: { newname: newName }
+    })
+    .fail(function(xhr) {
+      $("#flash").displayErrorMsg(xhr.responseText)
+      $(this).blur()
+    })
+    .done(function(html, status, xhr) {
+      $("#main").load(window.location.href)
+    })
+  }
+
+  // Esc key
+  if (e.keyCode == 27) {
+    // Cancel
+    $(this).blur()
+  }
+})
+
+// Called when the the 'edit' field for renaming snapshots 
+// loses its focus.
+$("td.name :text").on("blur", function() {
+  $(this).hide()
+  $(this).prev("label").show()
+})
+
 // Delete the specified snapshots
 //  snaps: Array of snapshots identifiers
 var deleteSnapshots = function(snaps) {
@@ -73,7 +132,7 @@ var deleteSnapshots = function(snaps) {
 $(".delete-snapshot").click(function(e) {
   e.preventDefault()
 
-  var snapshot = $(this).attr("data-path")
+  var snapshot = $(this).closest("tr").attr("data-path")
   deleteSnapshots([snapshot])
 })
 

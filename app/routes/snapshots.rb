@@ -17,8 +17,14 @@ class ZUI < Sinatra::Application
 
   # Rename snapshot
   put '/snapshot/*' do |path|
-    # Not implemented
-    "rename #{path}"
+    newname = params[:newname]
+    snap = ZFS(path)
+
+    begin
+      snap.rename!(newname)
+    rescue ZFS::Error => e
+      halt 400, e.message
+    end
   end
 
   # Delete one or multiple snapshots

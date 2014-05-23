@@ -1,0 +1,25 @@
+table.snapshots {
+	@extend .table;
+	@extend .table-striped;
+	@extend .table-hover;
+
+	label {
+		margin: 0;
+		font-weight: 600;
+		cursor: pointer;
+		margin-top: 4px;
+	}
+
+	td.name {
+		padding-top: 4px;
+		padding-bottom: 4px;
+	}
+
+	input.edit {
+		display: none;
+		padding-top: 3px;
+		padding-bottom: 3px;
+		font-size: 14px;
+		line-height: 1.5em;
+	}
+}
