@@ -3,7 +3,7 @@ class ZFS
     # Create a snapshot
     def snapshot!(snapname, opts={})
       raise NotFound, "no such filesystem" if !exist?
-      raise AlreadyExists, " Snapshot '#{snapname}' already exists." if ZFS("#{name}@#{snapname}").exist?
+      raise AlreadyExists, " Snapshot '#{snapname}' already exists." if ZFS("#{uid}@#{snapname}").exist?
 
       cmd = ZFS.zfs_path + ['snapshot']
       cmd << '-r' if opts[:children]
@@ -14,7 +14,7 @@ class ZFS
       if status.success? and out.empty?
         return ZFS("#{uid}@#{snapname}")
       else
-        raise Exception, "something went wrong: #{out}"
+        raise Error, "something went wrong: #{out}"
       end
     end
 
@@ -34,7 +34,7 @@ class ZFS
           ZFS(snap.chomp)
         end
       else
-        raise Exception, "something went wrong"
+        raise Error, "something went wrong"
       end
     end
   end

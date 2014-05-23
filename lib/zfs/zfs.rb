@@ -1,7 +1,7 @@
 require 'pathname'
 require 'date'
 require 'open3'
-require_relative 'snapshot'
+require_relative 'snapshotable'
 
 # Get the correct ZFS object depending on the path
 def ZFS(path)
@@ -462,7 +462,7 @@ class ZFS::Filesystem < ZFS
       initialize(newname)
       return self
     else
-      raise Exception, "something went wrong: out = #{out}"
+      raise Error, "something went wrong: out = #{out}"
     end
   end
 
@@ -510,7 +510,7 @@ class ZFS::Snapshot < ZFS
       initialize(newname)
       return self
     else
-      raise Exception, "something went wrong"
+      raise Error, "Something went wrong: #{out}"
     end
   end
 
@@ -520,7 +520,7 @@ class ZFS::Snapshot < ZFS
 
     raise AlreadyExists if ZFS(clone).exist?
 
-    cmd = [ZFS.zfs_path].flatten + ['clone']
+    cmd = ZFS.zfs_path + ['clone']
     cmd << '-p' if opts[:parents]
     cmd << uid
     cmd << clone
@@ -530,7 +530,7 @@ class ZFS::Snapshot < ZFS
     if status.success? and out.empty?
       return ZFS(clone)
     else
-      raise Exception, "something went wrong: out = #{out}"
+      raise Error, "Something went wrong: #{out}"
     end
   end
 
@@ -538,7 +538,7 @@ class ZFS::Snapshot < ZFS
   def destroy!(opts={})
     raise NotFound if !exist?
 
-    cmd = ZFS.zfs_path+ ['destroy']
+    cmd = ZFS.zfs_path + ['destroy']
     cmd << uid
 
     out, status = Open3.capture2e(*cmd)
@@ -546,7 +546,7 @@ class ZFS::Snapshot < ZFS
     if status.success? and out.empty?
       return true
     else
-      raise Error, "Something went wrong: out = #{out}"
+      raise Error, "Something went wrong: #{out}"
     end
   end
 

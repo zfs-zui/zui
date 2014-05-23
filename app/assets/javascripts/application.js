@@ -39,9 +39,8 @@ $.fn.onScreen = function() {
 // Load Switchery
 var loadSwitchery = function() {
   // All inputs with class 'switch' are replaced with an iOS 7 style switch
-  var switches = Array.prototype.slice.call(document.querySelectorAll('.switch'))
-  switches.forEach(function(html) {
-    var switchery = new Switchery(html)
+  $(".switch:not([data-switchery])").each(function() {
+    new Switchery(this)
   })
 }
 

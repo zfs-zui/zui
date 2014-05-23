@@ -17,6 +17,7 @@ class ZUI < Sinatra::Application
 
   # Rename snapshot
   put '/snapshot/*' do |path|
+    # Not implemented
     "rename #{path}"
   end
 
