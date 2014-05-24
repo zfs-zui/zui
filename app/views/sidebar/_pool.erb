@@ -6,12 +6,16 @@
   <h1><%= pool.name %></h1>
 
   <div class="info">
-    <p>
-      <%= number_to_human_size(pool.used) %> / 
-      <%= number_to_human_size(pool.available) %>
-    </p>
-    <div class="progress progress-thin">
-      <div class="progress-bar" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: <%= percentage_used(pool) %>%"></div>
-    </div>
+    <%- if pool.health == :online %>
+      <p>
+        <%= number_to_human_size(pool.used) %> / 
+        <%= number_to_human_size(pool.available) %>
+      </p>
+      <div class="progress progress-thin">
+        <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" style="width: <%= percentage_used(pool) %>%"></div>
+      </div>
+    <% else %>
+      <p class="error"><%= pool.health.to_s.upcase %></p>
+    <% end %>
   </div>
 </a>

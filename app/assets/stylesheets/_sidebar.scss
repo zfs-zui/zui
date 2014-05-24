@@ -151,6 +151,7 @@
 
 			.info {
 				color: $gray;
+				.error { color: $brand-danger; }
 			}
 
 			.status {
@@ -164,7 +165,7 @@
 				&.pool {
 					width: 32px; height: 32px;
 					margin-right: 10px;
-					margin-top: 5px;
+					margin-top: 2px;
 					background: image-url("pool.png") no-repeat center;
 				}
 

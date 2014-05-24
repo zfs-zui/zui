@@ -34,9 +34,11 @@
     <%= partial(:'pools/overview', locals: {pool: @pool}) %>
   </div>
 
-  <div class="tab-pane" id="snapshots">
-    <%= partial(:'filesystems/snapshots', locals: {fs: @pool, recursive: true}) %>
-  </div>
+  <%- if @pool.health == :online %>
+    <div class="tab-pane" id="snapshots">
+      <%= partial(:'filesystems/snapshots', locals: {fs: @pool, recursive: true}) %>
+    </div>
+  <% end %>
 </div>
 
 <!-- Destroy modal -->

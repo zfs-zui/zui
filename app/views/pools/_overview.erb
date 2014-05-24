@@ -1,15 +1,17 @@
 <!-- Overview tab -->
-<div class="row">
-  <!-- Usage column -->
-  <div class="col-md-6 col-lg-4">
-    <%= partial(:'filesystems/usage', locals: {fs: pool}) %>
-  </div>
+<%- if pool.health == :online %>
+  <div class="row">
+    <!-- Usage column -->
+    <div class="col-md-6 col-lg-4">
+      <%= partial(:'filesystems/usage', locals: {fs: pool}) %>
+    </div>
 
-  <!-- Properties column -->
-  <div class="properties col-md-6 col-lg-4">
-    <%= partial(:'filesystems/properties', locals: {fs: pool}) %>
+    <!-- Properties column -->
+    <div class="properties col-md-6 col-lg-4">
+      <%= partial(:'filesystems/properties', locals: {fs: pool}) %>
+    </div>
   </div>
-</div>
+<% end %>
 
 <!-- Status row -->
 <div class="row">

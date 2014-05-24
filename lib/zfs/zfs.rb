@@ -106,7 +106,7 @@ class ZFS
     if status.success? and stderr.empty? and stdout.lines.count == 1
       return stdout.chomp
     else
-      raise Error, "Something went wrong..."
+      raise Error, "Something went wrong: #{stderr}"
     end
   end
 
@@ -159,11 +159,10 @@ class ZFS
 
     # Define an attribute
     def property(name, opts={})
-
       case opts[:type]
         when :size, :integer
-          # FIXME: also takes :values. if :values is all-Integers, these are the only options. if there are non-ints, then :values is a supplement
-
+          # FIXME: also takes :values. if :values is all-Integers, these are the only options.
+          # if there are non-ints, then :values is a supplement
           define_method name do
             Integer(self[name])
           end
@@ -315,6 +314,38 @@ class ZFS::Pool < ZFS
     end
 
     @name, @pool = uid, uid
+  end
+
+  # Does the pool exist?
+  def exist?
+    cmd = ZFS.zpool_path + %w(list -H -oname) + [uid]
+
+    out, status = Open3.capture2e(*cmd)
+    return (status.success? && out == "#{uid}\n")
+  end
+
+  # Get pool health
+  # Possible values are:
+  #   online, :degraded, :faulted, :offline, :unavail, :removed
+  def health
+    cmd = ZFS.zpool_path + %w(list -H -o health)
+    cmd << @uid
+    stdout, stderr, status = Open3.capture3(*cmd)
+
+    if status.success? and stderr.empty? and stdout.lines.count == 1
+      return stdout.chomp.downcase.to_sym
+    else
+      raise Error, "Something went wrong..."
+    end
+  end
+
+  # Returns the filesystems of this pool
+  def children(opts={})
+    if health != :online
+      return []
+    else
+      return super(opts)
+    end
   end
 
   # Create pool
