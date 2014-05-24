@@ -27,6 +27,16 @@ class ZUI < Sinatra::Application
     end
   end
 
+  post '/snapshot/*/rollback' do |path|
+    snap = ZFS(path)
+
+    begin
+      snap.rollback!
+    rescue ZFS::Error => e
+      halt 400, e.message
+    end
+  end
+
   # Delete one or multiple snapshots
   delete '/snapshot' do
     snapshots = params[:snapshots]

@@ -565,6 +565,22 @@ class ZFS::Snapshot < ZFS
     end
   end
 
+  # Rollback snapshot
+  def rollback!
+    raise NotFound if !exist?
+
+    cmd = ZFS.zfs_path + ['rollback']
+    cmd << uid
+
+    out, status = Open3.capture2e(*cmd)
+
+    if status.success? and out.empty?
+      return true
+    else
+      raise Error, "Something went wrong: #{out}"
+    end
+  end
+
   # Destroy snapshot
   def destroy!(opts={})
     raise NotFound if !exist?

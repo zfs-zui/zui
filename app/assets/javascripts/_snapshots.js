@@ -110,6 +110,25 @@ $("td.name :text").on("blur", function() {
   $(this).prev("label").show()
 })
 
+// Rollback the clicked snapshot
+$(".rollback-snapshot").click(function(e) {
+  e.preventDefault()
+
+  var snapshot = $(this).closest("tr").attr("data-path")
+  var url = encodeURI("/snapshot/"+snapshot+"/rollback")
+
+  $.ajax({
+    type: "POST",
+    url: url
+  })
+  .fail(function(xhr) {
+    $("#flash").displayErrorMsg(xhr.responseText)
+  })
+  .done(function(html) {
+    $("#flash").displaySuccessMsg("Snapshot '" + snapshot + "' has beed rolled back successfully!")
+  })
+})
+
 // Delete the specified snapshots
 //  snaps: Array of snapshots identifiers
 var deleteSnapshots = function(snaps) {
