@@ -16,9 +16,9 @@ class ZUI < Sinatra::Application
   end
 
   # Rename snapshot
-  put '/snapshot/*' do |path|
+  put '/snapshot/*' do |snapshot|
     newname = params[:newname]
-    snap = ZFS(path)
+    snap = ZFS(snapshot)
 
     begin
       snap.rename!(newname)
@@ -27,11 +27,29 @@ class ZUI < Sinatra::Application
     end
   end
 
-  post '/snapshot/*/rollback' do |path|
-    snap = ZFS(path)
+  # Rollback snapshot
+  post '/snapshot/*/rollback' do |snapshot|
+    snap = ZFS(snapshot)
 
     begin
       snap.rollback!
+    rescue ZFS::Error => e
+      halt 400, e.message
+    end
+  end
+
+  # Clone snapshot
+  post '/snapshot/*/clone' do |snapshot|
+    name = params[:name]
+    location = params[:location]
+    # Check inputs
+    if name.empty? or location.empty?
+      halt 400, "The clone name and its location cannot be empty." 
+    end
+
+    snap = ZFS(snapshot)
+    begin
+      snap.clone!(File.join(location, name))
     rescue ZFS::Error => e
       halt 400, e.message
     end

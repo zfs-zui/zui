@@ -19,55 +19,97 @@
   <p>No snapshots</p>
 <%- else %>
   <table id="snapshots-table" class="snapshots">
-  <thead>
-    <tr>
-      <th><input type="checkbox" id="check-all"></th>
-      <%= "<th>Filesystem</th>" if recursive %>
-      <th class="col-sm-5">Name</th>
-      <th>Creation Date</th>
-      <th>Used</th>
-      <th>Refer</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%- fs.snapshots({recursive: recursive}).each do |snap| %>
-      <tr data-path="<%= snap.uid %>">
-        <td>
-          <input type="checkbox" name="snapshots[]" id="<%= snap.uid %>">
-        </td>
-
-        <%- if recursive %>
-          <td><%= snap.path || snap.pool %></td>
-        <% end %>
-
-        <td class="name">
-          <label for="<%= snap.uid %>"><%= snap.name %></label>
-          <input type="text" class="edit form-control input-sm" value="<%= snap.name %>">
-        </td>
-
-        <td><%= snap.creation.to_formatted_s(:short) %></td>
-        <td><%= number_to_human_size(snap.used) %></td>
-        <td><%= number_to_human_size(snap.referenced) %></td>
-        <td>
-          <div class="btn-group pull-right">
-            <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
-              <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu">
-              <li><a href="#" class="rename-snapshot">Rename</a></li>
-              <li><a href="#">Clone</a></li>
-              <li><a href="#" class="rollback-snapshot">Rollback</a></li>
-              <li class="divider"></li>
-              <li><a href="#" class="delete-snapshot">Delete</a></li>
-            </ul>
-          </div>
-        </td>
+    <thead>
+      <tr>
+        <th><input type="checkbox" id="check-all"></th>
+        <%= "<th>Filesystem</th>" if recursive %>
+        <th class="col-sm-5">Name</th>
+        <th>Creation Date</th>
+        <th>Used</th>
+        <th>Refer</th>
+        <th></th>
       </tr>
-    <%- end %>
-  </tbody>
-</table>
-<p>
-  <button id="btn-bulk-delete" class="btn btn-sm btn-danger" disabled>Delete</button>
-</p>
+    </thead>
+    <tbody>
+      <%- fs.snapshots({recursive: recursive}).each do |snap| %>
+        <tr data-path="<%= snap.uid %>">
+          <td>
+            <input type="checkbox" name="snapshots[]" id="<%= snap.uid %>">
+          </td>
+
+          <%- if recursive %>
+            <td><%= snap.path || snap.pool %></td>
+          <% end %>
+
+          <td class="name">
+            <label for="<%= snap.uid %>"><%= snap.name %></label>
+            <input type="text" class="edit form-control input-sm" value="<%= snap.name %>">
+          </td>
+
+          <td><%= snap.creation.to_formatted_s(:short) %></td>
+          <td><%= number_to_human_size(snap.used) %></td>
+          <td><%= number_to_human_size(snap.referenced) %></td>
+          <td>
+            <div class="btn-group pull-right">
+              <button class="btn btn-primary btn-xs dropdown-toggle" type="button" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-cog"></i> <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu">
+                <li><a href="#" class="rename-snapshot">Rename</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#clone-modal">Clone</a></li>
+                <li><a href="#" class="rollback-snapshot">Rollback</a></li>
+                <li class="divider"></li>
+                <li><a href="#" class="delete-snapshot">Delete</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      <%- end %>
+    </tbody>
+  </table>
+  <p>
+    <button id="btn-bulk-delete" class="btn btn-sm btn-danger" disabled>Delete</button>
+  </p>
 <%- end %>
+
+<!-- Clone modal -->
+<div class="modal fade" id="clone-modal" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title"></h4>
+      </div>
+
+      <div class="modal-body form-horizontal">
+        <div class="error"></div>
+        <input type="hidden" name="snapshot">
+
+        <div class="form-group">
+          <label for="fs-name" class="col-sm-4 control-label">Clone Name</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="clone-name" name="name">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="fs-location" class="col-sm-4 control-label">Location</label>
+          <div class="col-sm-6">
+            <select class="form-control" name="location">
+              <!-- List every filesystems of the pool -->
+              <option value="<%= fs.pool %>"><%= fs.pool %></option>
+              <%- ZFS(fs.pool).children({recursive: true}).each do |f| %>
+                <option value="<%= f.uid %>"><%= f.uid %></option>
+              <% end %>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button id="clone" class="btn btn-primary">Clone</button>
+      </div>
+    </div>
+  </div>
+</div>

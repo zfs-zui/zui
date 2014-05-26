@@ -3,6 +3,9 @@
     <h2>
       <i class="icon folder-nm"></i> 
       <%= @fs.path %>
+      <%- if @fs.origin %>
+        <small>cloned from <%= @fs.origin.uid %></small>
+      <% end %>
     </h2>
   </div>
 

@@ -129,6 +129,47 @@ $(".rollback-snapshot").click(function(e) {
   })
 })
 
+// Clone modal opened
+$('#clone-modal').on('show.bs.modal', function(e) {
+  var $clickedTarget = $(e.relatedTarget)
+  var snapshot = $clickedTarget.closest("tr").attr("data-path")
+
+  // Set modal title to the current snapshot
+  $("#clone-modal .modal-title").text("Clone '" + snapshot + "'")
+  // Store the snapshot uid in the hidden input,
+  // so we can retrieve it when sending the form.
+  $("#clone-modal input[type='hidden']").val(snapshot)
+
+  // Clear any previous error
+  $("#clone-modal .error").html("")
+})
+
+// Clone a snapshot
+$("#clone").click(function(e) {
+  e.preventDefault()
+
+  var snapshot = $("#clone-modal input[type='hidden']").val()
+  var url = encodeURI("/snapshot/"+snapshot+"/clone")
+  var data = {
+    name: $("#clone-modal input[name='name']").val(),
+    location: $("#clone-modal select[name='location']").val()
+  }
+
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: data
+  })
+  .fail(function(xhr) {
+    $("#clone-modal .error").displayErrorMsg(xhr.responseText)
+  })
+  .done(function(html) {
+    $('#clone-modal').modal('hide')
+    // Reload the whole page to refresh the sidebar
+    location.reload()
+  })
+})
+
 // Delete the specified snapshots
 //  snaps: Array of snapshots identifiers
 var deleteSnapshots = function(snaps) {
@@ -160,7 +201,8 @@ $("#btn-bulk-delete").click(function() {
   var checkedSnapshots = []
 
   $("#snapshots-table tbody").find('input[type="checkbox"]:checked').each(function() {
-    checkedSnapshots.push($(this).val())
+    var snapshot = $(this).closest("tr").attr("data-path")
+    checkedSnapshots.push(snapshot)
   })
 
   deleteSnapshots(checkedSnapshots)
