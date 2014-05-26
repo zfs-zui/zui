@@ -549,7 +549,7 @@ class ZFS::Snapshot < ZFS
   def clone!(clone, opts={})
     clone = clone.uid if clone.is_a? ZFS
 
-    raise AlreadyExists if ZFS(clone).exist?
+    raise AlreadyExists, "Clone '#{clone}' already exists." if ZFS(clone).exist?
 
     cmd = ZFS.zfs_path + ['clone']
     cmd << '-p' if opts[:parents]
