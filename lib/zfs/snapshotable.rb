@@ -2,7 +2,7 @@ class ZFS
   module Snapshotable
     # Create a snapshot
     def snapshot!(snapname, opts={})
-      raise NotFound, "no such filesystem" if !exist?
+      raise NotFound, "Filesystem not found" if !exist?
       raise AlreadyExists, " Snapshot '#{snapname}' already exists." if ZFS("#{uid}@#{snapname}").exist?
 
       cmd = ZFS.zfs_path + ['snapshot']
