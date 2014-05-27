@@ -2,8 +2,8 @@
  * _snapshots.js
  */
 
-// Create a snapshot
-$("#create-snap").click(function() {
+// Create snapshot button clicked
+$(document).on("click", "#create-snap", function() {
   $button = $(this)
   $button.text("Creating...").prop("disabled", true)
 
@@ -31,12 +31,12 @@ $("#create-snap").click(function() {
  * Check/uncheck all checkboxes when clicking
  * the 'master' checkbox.
  */
-$("#check-all").change(function() {
+$(document).on("change", "#check-all", function() {
   var $table= $("#snapshots-table")
   $('td input:checkbox', $table).prop("checked", this.checked)
 })
 
-$("#snapshots-table input:checkbox").change(function() {
+$(document).on("change", "#snapshots-table input:checkbox", function() {
   var nbrChecked = $("#snapshots-table tbody").find('input[type="checkbox"]:checked').length
 
   // Enable the delete button only if at least one checkbox is checked
@@ -53,7 +53,7 @@ $("#snapshots-table input:checkbox").change(function() {
 
 
 // Rename the clicked snapshot
-$(".rename-snapshot").click(function(e) {
+$(document).on("click", ".rename-snapshot", function(e) {
   e.preventDefault()
 
   var $nameRow = $(this).closest("tr").find("td.name")
@@ -66,7 +66,7 @@ $(".rename-snapshot").click(function(e) {
 })
 
 // Handle keys when renaming snapshot
-$("td.name :text").keyup(function(e) {
+$(document).on("keyup", "td.name input:text", function(e) {
   var $input = $(this)
 
   // Enter key
@@ -105,13 +105,13 @@ $("td.name :text").keyup(function(e) {
 
 // Called when the the 'edit' field for renaming snapshots 
 // loses its focus.
-$("td.name :text").on("blur", function() {
+$(document).on("blur", "td.name input:text", function() {
   $(this).hide()
   $(this).prev("label").show()
 })
 
 // Rollback the clicked snapshot
-$(".rollback-snapshot").click(function(e) {
+$(document).on("click", ".rollback-snapshot", function(e) {
   e.preventDefault()
 
   var snapshot = $(this).closest("tr").attr("data-path")
@@ -130,7 +130,7 @@ $(".rollback-snapshot").click(function(e) {
 })
 
 // Clone modal opened
-$('#clone-modal').on('show.bs.modal', function(e) {
+$(document).on("show.bs.modal", "#clone-modal", function(e) {
   var $clickedTarget = $(e.relatedTarget)
   var snapshot = $clickedTarget.closest("tr").attr("data-path")
 
@@ -145,7 +145,7 @@ $('#clone-modal').on('show.bs.modal', function(e) {
 })
 
 // Clone a snapshot
-$("#clone").click(function(e) {
+$(document).on("click", "#clone", function(e) {
   e.preventDefault()
 
   var snapshot = $("#clone-modal input[type='hidden']").val()
@@ -189,7 +189,7 @@ var deleteSnapshots = function(snaps) {
 }
 
 // Delete a single snapshot
-$(".delete-snapshot").click(function(e) {
+$(document).on("click", ".delete-snapshot", function(e) {
   e.preventDefault()
 
   var snapshot = $(this).closest("tr").attr("data-path")
@@ -197,7 +197,7 @@ $(".delete-snapshot").click(function(e) {
 })
 
 // Bulk delete selected snapshots
-$("#btn-bulk-delete").click(function() {
+$(document).on("click", "#btn-bulk-delete", function() {
   var checkedSnapshots = []
 
   $("#snapshots-table tbody").find('input[type="checkbox"]:checked').each(function() {

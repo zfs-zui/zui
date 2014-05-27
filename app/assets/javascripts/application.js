@@ -9,6 +9,9 @@
  *= require bootstrap/tab
  *
  *= require _flash
+ *= require _pools
+ *= require _properties
+ *= require _snapshots
  */
 
 /*
