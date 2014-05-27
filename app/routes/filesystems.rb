@@ -36,7 +36,7 @@ class ZUI < Sinatra::Application
     # Try creating the filesystem
     begin
       fs = ZFS(File.join(path, name))
-      fs.create({ parents: true })
+      fs.create!({ parents: true })
     rescue ZFS::Error => e
       flash[:error] = e.message
       redirect back

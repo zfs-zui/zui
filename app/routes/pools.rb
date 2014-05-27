@@ -27,7 +27,7 @@ class ZUI < Sinatra::Application
     # Try creating the pool with the supplied parameters
     begin
       pool = ZFS::Pool.new(name)
-      pool.create(type, disks)
+      pool.create!(type, disks)
     rescue ZFS::Error => e
       flash[:error] = e.message
       redirect back
@@ -57,7 +57,7 @@ class ZUI < Sinatra::Application
 
     # Try expanding the pool with the supplied parameters
     begin
-      pool.add_vdev(type, disks)
+      pool.add_vdev!(type, disks)
     rescue ZFS::Error => e
       flash[:error] = e.message
       redirect back

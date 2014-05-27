@@ -339,6 +339,19 @@ class ZFS::Pool < ZFS
     end
   end
 
+  # Get pool status, as returned by zpool status
+  def status
+    cmd = ZFS.zpool_path + ['status']
+    cmd << uid
+
+    out, status = Open3.capture2e(*cmd)
+    if status.success?
+      return out
+    else
+      return "#{out}\n#{status}"
+    end
+  end
+
   # Returns the filesystems of this pool
   def children(opts={})
     if health != :online
@@ -349,7 +362,7 @@ class ZFS::Pool < ZFS
   end
 
   # Create pool
-  def create(type, disks)
+  def create!(type, disks)
     raise AlreadyExists, "Pool '#{uid}' already exists." if exist?
 
     # Check disks
@@ -376,7 +389,7 @@ class ZFS::Pool < ZFS
   end
 
   # Add a VDEV to an existing pool
-  def add_vdev(type, disks)
+  def add_vdev!(type, disks)
     raise NotFound, "Pool '#{uid}' does not exist." unless exist?
 
     # Check disks
@@ -416,17 +429,6 @@ class ZFS::Pool < ZFS
     end
   end
 
-  def status
-    cmd = ZFS.zpool_path + ['status']
-    cmd << uid
-
-    out, status = Open3.capture2e(*cmd)
-    if status.success?
-      return out
-    else
-      return "#{out}\n#{status}"
-    end
-  end
 end
 
 class ZFS::Filesystem < ZFS
@@ -440,8 +442,7 @@ class ZFS::Filesystem < ZFS
   end
 
   # Create filesystem
-  def create(opts={})
-    #return nil if exist?
+  def create!(opts={})
     raise AlreadyExists, "Filesystem '#{uid}' already exists." if exist?
 
     cmd = ZFS.zfs_path + ['create']
@@ -482,7 +483,7 @@ class ZFS::Filesystem < ZFS
   def rename!(newname, opts={})
     raise AlreadyExists if ZFS(newname).exist?
 
-    cmd = [ZFS.zfs_path].flatten + ['rename']
+    cmd = ZFS.zfs_path + ['rename']
     cmd << '-p' if opts[:parents]
     cmd << name
     cmd << newname
@@ -493,7 +494,7 @@ class ZFS::Filesystem < ZFS
       initialize(newname)
       return self
     else
-      raise Error, "something went wrong: out = #{out}"
+      raise Error, "something went wrong: #{out}"
     end
   end
 
