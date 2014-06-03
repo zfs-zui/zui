@@ -64,7 +64,7 @@ class ZUI < Sinatra::Application
     end
 
     # Success
-    flash[:ok] = "Pool '#{name}' successfully extended!"
+    flash[:ok] = "Pool '#{pool}' successfully extended!"
     redirect back
   end
 
